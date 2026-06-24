@@ -1,0 +1,26 @@
+---
+// The Easel editor. A standalone Svelte SPA (client-only) — not part of the
+// public site layout. It signs the artist in via the shared OAuth relay and
+// edits content straight through the GitHub API. See src/admin/.
+import '@fontsource-variable/syne';
+import '@fontsource/space-grotesk/400.css';
+import '@fontsource/space-grotesk/500.css';
+import '@fontsource/space-grotesk/700.css';
+import '../../styles/tokens.css';
+import '../../admin/admin.css';
+import Editor from '../../admin/Editor.svelte';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>Edit your site · Easel</title>
+  </head>
+  <body>
+    <Editor client:only="svelte" />
+  </body>
+</html>
