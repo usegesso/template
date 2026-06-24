@@ -21,44 +21,49 @@ backend:
 # used — so this is safe to ship.
 local_backend: true
 
+# Branding shown on the sign-in screen and editor header.
+logo_url: /favicon.svg
+
 # Default media location. Per-collection overrides below keep image paths
 # relative so they match astro:assets imports in frontmatter.
 media_folder: src/assets/uploads
 public_folder: /assets/uploads
 
-# Friendlier editorial workflow off by default (simple, direct commits).
+# Simple, direct saves (no separate review/publish workflow).
 publish_mode: simple
 
 collections:
   # --- Artworks: one entry per piece, drag to reorder ---
   - name: artworks
-    label: Artworks
+    label: Artwork
     label_singular: Artwork
+    description: Each piece in your portfolio. Add a new one for every work you want to show.
     folder: src/content/artworks
     create: true
-    # Sort the list by the manual order field; drag updates it.
+    editor:
+      preview: false
     sortable_fields: [order, title, year]
-    # Store uploaded images next to the other artwork assets, as relative paths.
     media_folder: ../../assets/artworks
     public_folder: ../../assets/artworks
-    summary: '{{title}} ({{year}}) — {{status}}'
+    summary: '{{title}} · {{year}} · {{status}}'
     fields:
-      - { name: image, label: Image, widget: image }
-      - { name: title, label: Title, widget: string }
-      - { name: year, label: Year, widget: number, required: false, value_type: int }
-      - { name: medium, label: Medium, widget: string, required: false }
-      - { name: dimensions, label: Dimensions, widget: string, required: false }
+      - { name: image, label: Photo, widget: image, hint: A photo of your work. Big phone photos are fine — Easel resizes them for you. }
+      - { name: title, label: Title, widget: string, hint: What this piece is called. }
+      - { name: year, label: Year, widget: number, required: false, value_type: int, hint: The year you made it. }
+      - { name: medium, label: Medium, widget: string, required: false, hint: 'What it''s made of, e.g. Oil on canvas.' }
+      - { name: dimensions, label: Size, widget: string, required: false, hint: 'How big it is, e.g. 24 × 30 in.' }
       - name: status
-        label: Status
+        label: Availability
         widget: select
         default: available
+        hint: Shows a little tag on the piece so visitors know if they can buy it.
         options:
           - { label: Available, value: available }
           - { label: Sold, value: sold }
-          - { label: Inquire, value: inquire }
+          - { label: Ask me, value: inquire }
           - { label: Not for sale, value: nfs }
-      - { name: price, label: Price (shown when available), widget: string, required: false }
-      - { name: alt, label: Alt text (describe the work — required), widget: string }
+      - { name: price, label: Price, widget: string, required: false, hint: 'Only shown when availability is "Available", e.g. $1,800.' }
+      - { name: alt, label: Photo description, widget: string, hint: A short description of the image, for screen readers and search engines. Required. }
       - name: collection
         label: Series
         widget: relation
@@ -67,29 +72,36 @@ collections:
         value_field: '{{slug}}'
         search_fields: [title]
         display_fields: [title]
-      - { name: order, label: Sort order, widget: number, default: 0, value_type: int }
-      - { name: featured, label: Featured on homepage, widget: boolean, default: false }
-      - { name: body, label: Description, widget: markdown, required: false }
+        hint: Optional. Group this piece into one of your series.
+      - { name: order, label: Order, widget: number, default: 0, value_type: int, hint: Lower numbers show first on your homepage. }
+      - { name: featured, label: Feature on homepage, widget: boolean, default: false, hint: Highlight this piece at the top of your work. }
+      - { name: body, label: About this piece, widget: markdown, required: false, hint: Optional. A few words about the work. }
 
   # --- Series / collections ---
   - name: collections
     label: Series
     label_singular: Series
+    description: Group your work into bodies or collections, like "Paintings 2024".
     folder: src/content/collections
     create: true
     identifier_field: title
+    editor:
+      preview: false
     media_folder: ../../assets/collections
     public_folder: ../../assets/collections
     fields:
-      - { name: title, label: Title, widget: string }
-      - { name: description, label: Description, widget: text, required: false }
-      - { name: cover, label: Cover image, widget: image, required: false }
-      - { name: order, label: Sort order, widget: number, default: 0, value_type: int }
+      - { name: title, label: Name, widget: string, hint: What this series is called. }
+      - { name: description, label: Description, widget: text, required: false, hint: A sentence or two about the series. }
+      - { name: cover, label: Cover photo, widget: image, required: false, hint: Optional. A photo to represent the series. }
+      - { name: order, label: Order, widget: number, default: 0, value_type: int, hint: Lower numbers show first. }
       - { name: body, label: Intro, widget: markdown, required: false }
 
   # --- Pages (about, contact, cv, press) ---
   - name: pages
     label: Pages
+    description: The words on your About, Contact, CV, and Press pages.
+    editor:
+      preview: false
     files:
       - name: about
         label: About
@@ -97,96 +109,108 @@ collections:
         media_folder: ../../assets/site
         public_folder: ../../assets/site
         fields:
-          - { name: title, label: Title, widget: string }
-          - { name: portrait, label: Portrait, widget: image, required: false }
-          - { name: statement, label: Short statement, widget: text, required: false }
-          - { name: body, label: Bio, widget: markdown }
+          - { name: title, label: Page title, widget: string }
+          - { name: portrait, label: Photo of you, widget: image, required: false, hint: Optional. A portrait to show on your About page. }
+          - { name: statement, label: One-line intro, widget: text, required: false, hint: A short line that sums you up. }
+          - { name: body, label: Your bio, widget: markdown, hint: Tell visitors about yourself and your work. }
       - name: contact
         label: Contact
         file: src/content/pages/contact.md
         fields:
-          - { name: title, label: Title, widget: string }
-          - { name: intro, label: Intro, widget: text, required: false }
-          - { name: email, label: Email, widget: string, required: false }
-          - { name: formEnabled, label: Show contact form, widget: boolean, default: true }
-          - { name: body, label: Body, widget: markdown, required: false }
+          - { name: title, label: Page title, widget: string }
+          - { name: intro, label: Intro, widget: text, required: false, hint: A line inviting people to get in touch. }
+          - { name: email, label: Your email, widget: string, required: false, hint: Where people can reach you. }
+          - { name: formEnabled, label: Show a contact form, widget: boolean, default: true, hint: Let visitors message you without opening their email app. }
+          - { name: body, label: More details, widget: markdown, required: false }
       - name: cv
         label: CV
         file: src/content/pages/cv.md
         fields:
-          - { name: title, label: Title, widget: string }
+          - { name: title, label: Page title, widget: string }
           - name: cv
             label: Sections
             widget: list
+            label_singular: Section
+            hint: Add sections like Education, Exhibitions, or Awards.
             fields:
-              - { name: heading, label: Heading, widget: string }
+              - { name: heading, label: Section heading, widget: string }
               - name: items
                 label: Entries
+                label_singular: Entry
                 widget: list
                 fields:
                   - { name: year, label: Year, widget: string, required: false }
-                  - { name: text, label: Text, widget: string }
+                  - { name: text, label: Detail, widget: string }
       - name: press
         label: Press
         file: src/content/pages/press.md
         fields:
-          - { name: title, label: Title, widget: string }
+          - { name: title, label: Page title, widget: string }
           - name: press
-            label: Press items
+            label: Press mentions
+            label_singular: Mention
             widget: list
             fields:
-              - { name: outlet, label: Outlet, widget: string }
-              - { name: title, label: Title, widget: string }
+              - { name: outlet, label: Publication, widget: string }
+              - { name: title, label: Headline, widget: string }
               - { name: url, label: Link, widget: string, required: false }
               - { name: date, label: Date, widget: string, required: false }
-              - { name: excerpt, label: Excerpt, widget: text, required: false }
+              - { name: excerpt, label: Quote, widget: text, required: false }
 
   # --- Site settings (singleton) ---
   - name: site
-    label: Site settings
+    label: Settings
+    description: The name, look, and details of your whole site.
+    editor:
+      preview: false
     files:
       - name: settings
-        label: Settings
+        label: Site settings
         file: src/content/site/settings.json
         media_folder: ../../assets/site
         public_folder: ../../assets/site
         fields:
-          - { name: siteTitle, label: Site title, widget: string }
-          - { name: tagline, label: Tagline, widget: string, required: false }
-          - { name: logoText, label: Logo text, widget: string }
+          - { name: siteTitle, label: Site title, widget: string, hint: Usually your name or studio name. Shows in the browser tab and search results. }
+          - { name: tagline, label: Tagline, widget: string, required: false, hint: A short line under your name, like "Paintings and works on paper". }
+          - { name: logoText, label: Logo text, widget: string, hint: The name shown in the top corner of your site. }
           - name: theme
-            label: Theme
+            label: Color theme
             widget: select
             default: default
+            hint: The overall look of your site.
             options:
-              - { label: Default (paper), value: default }
+              - { label: Paper (light), value: default }
               - { label: Ink (dark), value: ink }
           - name: portfolioLayout
-            label: Portfolio layout
+            label: Homepage layout
             widget: select
             default: grid
+            hint: How your work is arranged on the homepage.
             options:
-              - { label: Grid, value: grid }
-              - { label: Masonry, value: masonry }
-          - { name: columns, label: Columns, widget: number, default: 3, min: 1, max: 6, value_type: int }
+              - { label: Even grid, value: grid }
+              - { label: Masonry (varied heights), value: masonry }
+          - { name: columns, label: Columns, widget: number, default: 3, min: 1, max: 6, value_type: int, hint: How many pieces appear across. 3 is a good start. }
           - name: motionDefault
             label: Animations
             widget: select
             default: full
+            hint: Subtle motion as visitors scroll. Visitors who prefer less motion always get the calm version automatically.
             options:
-              - { label: Animated, value: full }
+              - { label: On, value: full }
               - { label: Reduced, value: reduced }
-          - { name: rightClickProtect, label: Discourage image saving, widget: boolean, default: false }
-          - { name: watermark, label: Watermark images, widget: boolean, default: false }
-          - { name: watermarkText, label: Watermark text, widget: string, required: false }
-          - { name: metaDescription, label: Search description, widget: text, required: false }
-          - { name: ogImage, label: Social preview image, widget: string, required: false }
+          - { name: rightClickProtect, label: Discourage image saving, widget: boolean, default: false, hint: Makes it a little harder to right-click and save your images. Not foolproof. }
+          - { name: watermark, label: Watermark images, widget: boolean, default: false, hint: Overlay faint text on your images. }
+          - { name: watermarkText, label: Watermark text, widget: string, required: false, hint: 'What the watermark says, e.g. © Your Name.' }
+          - { name: metaDescription, label: Search description, widget: text, required: false, hint: A sentence describing your site, shown in Google results. }
+          - { name: ogImage, label: Social preview image, widget: string, required: false, hint: 'Advanced: the image shown when your site is shared on social media.' }
           - name: socialLinks
             label: Social links
+            label_singular: Link
             widget: list
             required: false
+            hint: Links to your Instagram, email, and so on.
             fields:
-              - { name: label, label: Label, widget: string }
-              - { name: url, label: URL, widget: string }
-          - { name: customDomain, label: Custom domain, widget: string, required: false }
-          - { name: analyticsSnippet, label: Analytics snippet, widget: text, required: false }
+              - { name: label, label: Name, widget: string, hint: 'e.g. Instagram' }
+              - { name: url, label: Web address, widget: string, hint: 'The full link, e.g. https://instagram.com/you' }
+          - { name: customDomain, label: Custom domain, widget: string, required: false, hint: 'Advanced: your own web address, like your-name.com.' }
+          - { name: analyticsSnippet, label: Analytics code, widget: text, required: false, hint: 'Advanced: paste a visitor-analytics snippet here if you use one.' }
