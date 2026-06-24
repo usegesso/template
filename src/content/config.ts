@@ -127,6 +127,9 @@ const site = defineCollection({
     socialLinks: z.array(socialLink).default([]),
     customDomain: z.string().optional(),
     analyticsSnippet: z.string().optional(),
+    // Power-user escape hatches (the artist's own site).
+    customCss: z.string().optional(),
+    customCode: z.string().optional(),
   }),
 });
 

@@ -89,5 +89,12 @@
       <input class="ez-input" bind:value={s.ogImage} placeholder="/assets/og-default.jpg" /></label>
     <label class="ez-field"><span class="ez-label">Analytics code</span>
       <textarea class="ez-input" rows="3" bind:value={s.analyticsSnippet}></textarea></label>
+    <label class="ez-field"><span class="ez-label">Custom CSS</span>
+      <textarea class="ez-input ez-mono" rows="5" bind:value={s.customCss} placeholder={".my-thing { color: red; }"}></textarea>
+      <span class="ez-help">Tweak your site's styles. Applied site-wide.</span></label>
+    <label class="ez-field"><span class="ez-label">Custom code</span>
+      <textarea class="ez-input ez-mono" rows="5" bind:value={s.customCode} placeholder={"<script>… or an embed</" + "script>"}></textarea>
+      <span class="ez-help">Scripts or embeds, added at the end of every page. Runs on your live site only.</span></label>
+    <p class="ez-help">These run on your published site, not here. Broken code can break your site — we don't check it.</p>
   </details>
 {/if}

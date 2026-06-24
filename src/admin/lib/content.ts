@@ -87,6 +87,8 @@ export interface Settings {
   socialLinks: { label: string; url: string }[];
   customDomain?: string;
   analyticsSnippet?: string;
+  customCss?: string;
+  customCode?: string;
   /** Design tokens (theme). Opaque to the editor's basic settings; carried through
    *  on save so the Look UI / wizard own it. See src/lib/design.ts. */
   design?: Record<string, any>;
