@@ -2,7 +2,6 @@
   import type { GitHub } from '../lib/github';
   import type { Settings } from '../lib/content';
   import { loadSettings, saveSettings } from '../lib/store';
-  import { PRESETS } from '../../lib/design';
 
   let { gh, notify }: { gh: GitHub; notify: (m: string, k?: 'info' | 'error') => void } = $props();
 
@@ -24,14 +23,6 @@
   }
   load();
 
-  const currentPreset = $derived((s.design?.preset as string) ?? 'bauhaus');
-  function applyPreset(id: string) {
-    // Store just the preset id; the site resolves the full bundle, and later
-    // granular tweaks layer on top as overrides.
-    s.design = { ...(s.design ?? {}), preset: id };
-    notify(`Theme set to ${PRESETS[id].label}. Save to apply it.`);
-  }
-
   async function save() {
     saving = true;
     try {
@@ -43,7 +34,6 @@
     saving = false;
   }
 
-  const presetIds = Object.keys(PRESETS);
 </script>
 
 <div class="ez-view__head">
@@ -56,17 +46,7 @@
 {#if loading}
   <p class="ez-help">Loading…</p>
 {:else}
-  <div class="ez-block">
-    <strong>Theme</strong>
-    <p class="ez-help">A starting look for your whole site. You'll be able to fine-tune colors, fonts, and more soon.</p>
-    <div class="ez-presets">
-      {#each presetIds as id (id)}
-        <button class="ez-preset" class:ez-preset--on={currentPreset === id} onclick={() => applyPreset(id)}>
-          {PRESETS[id].label}
-        </button>
-      {/each}
-    </div>
-  </div>
+  <p class="ez-help">Looks and themes live in the <strong>Design</strong> tab. This is the practical stuff.</p>
 
   <label class="ez-field"><span class="ez-label">Site title</span>
     <input class="ez-input" bind:value={s.siteTitle} placeholder="Your name or studio" />

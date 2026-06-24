@@ -139,13 +139,18 @@ export function designVars(d: DesignTokens): string {
   return `font-size:${d.type.baseSize}px;` + Object.entries(v).map(([k, val]) => `${k}:${val}`).join(';');
 }
 
-/** Body/root classes that switch structural variants. */
+/** Root classes that switch structural variants (so they preview live via CSS). */
 export function designClasses(d: DesignTokens): string {
+  const pages = ['about', 'contact', 'cv', 'press'] as const;
   return [
     `ez-nav-${d.nav.layout}`,
     `ez-thumb-${d.thumb.hover}`,
     `ez-bg-${d.background.type}`,
+    `ez-light-${d.lightbox.transition}`,
     d.shape.shadows === 'none' ? 'ez-flat' : '',
+    d.hero.enabled ? 'ez-hero-on' : 'ez-hero-off',
+    d.logo.mode === 'image' ? 'ez-logo-image' : 'ez-logo-text',
+    ...pages.filter((k) => !d.pages[k]).map((k) => `ez-page-${k}-off`),
   ]
     .filter(Boolean)
     .join(' ');

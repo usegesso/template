@@ -4,42 +4,33 @@ import MotionToggle from './MotionToggle.astro';
 interface Props {
   logoText: string;
   logo?: { mode: 'none' | 'text' | 'image'; image?: string };
-  layout?: 'side' | 'top';
-  pages?: { about: boolean; contact: boolean; cv: boolean; press: boolean };
 }
-const {
-  logoText,
-  logo = { mode: 'none' },
-  layout = 'side',
-  pages = { about: true, contact: true, cv: true, press: true },
-} = Astro.props;
+const { logoText, logo = { mode: 'none' } } = Astro.props;
 
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
-const all = [
-  { href: '/', label: 'Work', on: true },
-  { href: '/about', label: 'About', on: pages.about },
-  { href: '/cv', label: 'CV', on: pages.cv },
-  { href: '/press', label: 'Press', on: pages.press },
-  { href: '/contact', label: 'Contact', on: pages.contact },
+// All links always render; disabled pages are hidden via a root class so the
+// editor can toggle them live. `key` matches the ez-page-<key>-off classes.
+const links = [
+  { href: '/', label: 'Work', key: 'work' },
+  { href: '/about', label: 'About', key: 'about' },
+  { href: '/cv', label: 'CV', key: 'cv' },
+  { href: '/press', label: 'Press', key: 'press' },
+  { href: '/contact', label: 'Contact', key: 'contact' },
 ];
-const links = all.filter((l) => l.on);
 const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
 ---
 
-<header class:list={['ez-nav', `ez-nav--${layout}`]}>
+<header class="ez-nav">
   <div class="ez-container ez-nav__inner">
     <a href="/" class="ez-nav__brand" aria-label={`${logoText} — home`}>
-      {logo.mode === 'image' && logo.image ? (
-        <img class="ez-nav__logoimg" src={logo.image} alt={logoText} />
-      ) : (
-        <span class="ez-nav__logotext">{logoText}</span>
-      )}
+      {logo.image && <img class="ez-nav__logoimg" src={logo.image} alt={logoText} />}
+      <span class="ez-nav__logotext">{logoText}</span>
     </a>
 
     <nav aria-label="Primary">
       <ul class="ez-nav__list">
         {links.map((link) => (
-          <li>
+          <li class={`ez-pagelink-${link.key}`}>
             <a
               href={link.href}
               class:list={['ez-nav__link', { 'is-active': isActive(link.href) }]}
@@ -52,69 +43,36 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
       </ul>
     </nav>
 
-    <div class="ez-nav__tools">
-      <MotionToggle />
-    </div>
+    <div class="ez-nav__tools"><MotionToggle /></div>
   </div>
 </header>
 
 <style>
-  .ez-nav {
-    background: var(--ez-paper);
-    border-bottom: var(--ez-border-width) solid var(--ez-border);
-  }
-  .ez-nav__inner {
-    display: flex;
-    align-items: center;
-    gap: var(--ez-space-5);
-    padding-block: var(--ez-space-4);
-    flex-wrap: wrap;
-  }
-  .ez-nav__brand {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--ez-space-3);
-    text-decoration: none;
-    color: var(--ez-ink);
-    margin-right: auto;
-  }
-  .ez-nav__logotext {
-    font-family: var(--ez-font-display);
-    font-weight: var(--ez-heading-weight, 800);
-    font-size: var(--ez-text-xl);
-    letter-spacing: var(--ez-heading-spacing, -0.02em);
-    text-transform: var(--ez-heading-transform, none);
-  }
+  .ez-nav { background: var(--ez-paper); border-bottom: var(--ez-border-width) solid var(--ez-border); }
+  .ez-nav__inner { display: flex; align-items: center; gap: var(--ez-space-5); padding-block: var(--ez-space-4); flex-wrap: wrap; }
+  .ez-nav__brand { display: inline-flex; align-items: center; gap: var(--ez-space-3); text-decoration: none; color: var(--ez-ink); margin-right: auto; }
+  .ez-nav__logotext { font-family: var(--ez-font-display); font-weight: var(--ez-heading-weight, 800); font-size: var(--ez-text-xl); letter-spacing: var(--ez-heading-spacing, -0.02em); text-transform: var(--ez-heading-transform, none); }
   .ez-nav__logoimg { max-height: 44px; width: auto; }
-  .ez-nav__list {
-    display: flex;
-    gap: var(--ez-space-5);
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-  .ez-nav__link {
-    font-family: var(--ez-font-display);
-    font-weight: 700;
-    text-decoration: none;
-    color: var(--ez-ink);
-    padding-bottom: 2px;
-    border-bottom: var(--ez-border-width) solid transparent;
-  }
+  /* Logo mode: show image or text (toggled live by the editor). */
+  :global(html.ez-logo-text) .ez-nav__logoimg { display: none; }
+  :global(html.ez-logo-image) .ez-nav__logotext { display: none; }
+  .ez-nav__list { display: flex; gap: var(--ez-space-5); list-style: none; margin: 0; padding: 0; }
+  .ez-nav__link { font-family: var(--ez-font-display); font-weight: 700; text-decoration: none; color: var(--ez-ink); padding-bottom: 2px; border-bottom: var(--ez-border-width) solid transparent; }
   .ez-nav__link:hover { border-bottom-color: var(--ez-ink); }
   .ez-nav__link.is-active { border-bottom-color: var(--ez-blue); color: var(--ez-blue); }
   .ez-nav__tools { display: flex; align-items: center; }
 
-  /* Top layout: name on its own row, centered, with the links centered below. */
-  .ez-nav--top .ez-nav__inner {
-    flex-direction: column;
-    align-items: center;
-    gap: var(--ez-space-3);
-    text-align: center;
-  }
-  .ez-nav--top .ez-nav__brand { margin-right: 0; }
-  .ez-nav--top .ez-nav__tools { position: absolute; right: var(--ez-space-5); top: var(--ez-space-4); }
-  .ez-nav--top { position: relative; }
+  /* Hide pages turned off in the editor. */
+  :global(html.ez-page-about-off) .ez-pagelink-about,
+  :global(html.ez-page-contact-off) .ez-pagelink-contact,
+  :global(html.ez-page-cv-off) .ez-pagelink-cv,
+  :global(html.ez-page-press-off) .ez-pagelink-press { display: none; }
+
+  /* Top layout: name on its own centered row, links centered below. */
+  :global(html.ez-nav-top) .ez-nav { position: relative; }
+  :global(html.ez-nav-top) .ez-nav__inner { flex-direction: column; align-items: center; gap: var(--ez-space-3); text-align: center; }
+  :global(html.ez-nav-top) .ez-nav__brand { margin-right: 0; }
+  :global(html.ez-nav-top) .ez-nav__tools { position: absolute; right: var(--ez-space-5); top: var(--ez-space-4); }
 
   @media (max-width: 640px) {
     .ez-nav__inner { gap: var(--ez-space-3); }

@@ -319,6 +319,17 @@ img {
   border: 0;
 }
 
+/* Structural toggles driven by root classes (so the editor previews them live). */
+:root.ez-hero-off .ez-hero { display: none; }
+:root.ez-bg-none body { background: var(--ez-white); }
+:root.ez-bg-texture body {
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent 0 22px,
+    rgba(127, 127, 127, 0.06) 22px 23px
+  );
+}
+
 /* Geometric motif helpers (circle / square / triangle). */
 .ez-shape {
   display: inline-block;

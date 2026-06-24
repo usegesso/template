@@ -5,7 +5,6 @@ import Base from '../layouts/Base.astro';
 import Grid from '../components/Grid.astro';
 import Masonry from '../components/Masonry.astro';
 import ArtworkCard from '../components/ArtworkCard.astro';
-import LayoutToggle from '../components/LayoutToggle.astro';
 import Lightbox from '../components/Lightbox.astro';
 
 const settings = (await getEntry('site', 'settings'))!.data;
@@ -28,12 +27,11 @@ const Layout = settings.portfolioLayout === 'masonry' ? Masonry : Grid;
 
 <Base pageDescription={settings.tagline}>
   <div class="ez-container">
-    <header class="ez-home-head">
+    <header class="ez-home-head ez-hero">
       <div>
         <h1>{settings.siteTitle}</h1>
         {settings.tagline && <p class="ez-home-tagline">{settings.tagline}</p>}
       </div>
-      <LayoutToggle initial={settings.portfolioLayout} />
     </header>
 
     <Layout columns={settings.columns}>

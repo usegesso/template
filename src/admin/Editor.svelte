@@ -8,10 +8,11 @@
   import Artworks from './views/Artworks.svelte';
   import SeriesView from './views/SeriesView.svelte';
   import PagesView from './views/PagesView.svelte';
+  import DesignView from './views/DesignView.svelte';
   import SettingsView from './views/SettingsView.svelte';
 
   type Status = 'loading' | 'signin' | 'ready' | 'error' | 'unconfigured';
-  type View = 'artworks' | 'series' | 'pages' | 'settings';
+  type View = 'artworks' | 'series' | 'pages' | 'design' | 'settings';
 
   let status = $state<Status>('loading');
   let view = $state<View>('artworks');
@@ -120,6 +121,7 @@
     { id: 'artworks', label: 'Artwork' },
     { id: 'series', label: 'Series' },
     { id: 'pages', label: 'Pages' },
+    { id: 'design', label: 'Design' },
     { id: 'settings', label: 'Settings' },
   ];
 </script>
@@ -182,6 +184,8 @@
         <SeriesView {gh} {notify} onChange={refreshSeries} />
       {:else if view === 'pages'}
         <PagesView {gh} {notify} />
+      {:else if view === 'design'}
+        <DesignView {gh} {notify} />
       {:else if view === 'settings'}
         <SettingsView {gh} {notify} />
       {/if}
