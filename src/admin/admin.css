@@ -361,6 +361,22 @@
 .ez-quick strong { font-family: var(--ez-font-display); }
 .ez-quick .ez-shape { flex: none; }
 
+/* Getting-started checklist (HomeView). */
+.ez-gs { background: var(--ez-white); border: var(--ez-border-bold) solid var(--ez-border); box-shadow: var(--ez-shadow-hard-sm); padding: var(--ez-space-5); }
+.ez-gs__head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--ez-space-4); flex-wrap: wrap; margin-bottom: var(--ez-space-4); }
+.ez-gs__title { margin: 0; }
+.ez-gs__dismiss { background: none; border: 0; padding: 0; color: var(--ez-stone); font-family: var(--ez-font-display); font-weight: 700; cursor: pointer; }
+.ez-gs__dismiss:hover { color: var(--ez-ink); }
+.ez-gs__list { list-style: none; margin: 0; padding: 0; display: grid; }
+.ez-gs__item { display: flex; align-items: center; gap: var(--ez-space-4); padding: var(--ez-space-3) 0; border-top: var(--ez-border-width) solid var(--ez-border); }
+.ez-gs__item:first-child { border-top: 0; }
+.ez-gs__check { flex: none; width: 28px; height: 28px; display: grid; place-items: center; border: var(--ez-border-width) solid var(--ez-border); border-radius: 50%; font-weight: 800; }
+.ez-gs__item.is-done .ez-gs__check { background: var(--ez-blue); border-color: var(--ez-blue); color: var(--ez-white); }
+.ez-gs__text { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+.ez-gs__text strong { font-family: var(--ez-font-display); }
+.ez-gs__item.is-done .ez-gs__text strong { color: var(--ez-stone); text-decoration: line-through; }
+.ez-gs__cta { flex: none; }
+
 /* Responsive: collapse the sidebar into a drawer below 880px. */
 @media (max-width: 879px) {
   .ez-side {

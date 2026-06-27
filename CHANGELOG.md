@@ -7,6 +7,13 @@ newer version includes before they choose to update.
 Every update is opt-in and non-destructive: your artwork, pages, settings, and style are
 always preserved, and new features stay off until you turn them on.
 
+## 0.8.0
+
+- **A friendlier first run.** Your editor’s Home now shows a short “Getting started”
+  checklist — style your site, add your first piece, write your About — that ticks each
+  item off on its own as you go and disappears once you’re set up (or whenever you dismiss
+  it). It replaces the old one-off prompts with a clearer, all-in-one starting point.
+
 ## 0.7.0
 
 - **Let visitors filter your gallery.** You can now turn on filter chips for your home
