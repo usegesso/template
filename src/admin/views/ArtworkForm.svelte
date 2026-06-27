@@ -181,6 +181,14 @@
     </label>
   </div>
 
+  {#if form.status === 'available'}
+    <label class="ez-field">
+      <span class="ez-label">Buy / shop link (optional)</span>
+      <input class="ez-input" bind:value={form.buyLink} placeholder="https://… (Stripe, Gumroad, Etsy, Big Cartel)" />
+      <span class="ez-help">Paste a checkout link and this piece gets a Buy button. Leave it blank for an Inquire button instead. Turn buttons on under Settings → Selling.</span>
+    </label>
+  {/if}
+
   <label class="ez-field">
     <span class="ez-label">Photo description</span>
     <input class="ez-input" bind:value={form.alt} placeholder="A blue circle on a cream field" />

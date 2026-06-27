@@ -90,6 +90,24 @@ const { useNetlifyForms, formEndpoint } = hostConfig();
       <NewsletterSignup heading={settings.newsletterHeading} blurb={settings.newsletterBlurb} />
     )}
   </div>
+
+  {/* When arriving from a piece's "Inquire" button (/contact/?piece=Title), prefill
+      the message (and FormSubmit subject) so the artist knows which work it's about.
+      No-ops if the form is off or the field is missing. */}
+  <script is:inline>
+    (function () {
+      var piece = new URLSearchParams(location.search).get('piece');
+      if (!piece) return;
+      var msg = document.getElementById('message');
+      if (msg && !msg.value) {
+        msg.value = 'I’m interested in “' + piece + '”. ';
+        msg.focus();
+        msg.setSelectionRange(msg.value.length, msg.value.length);
+      }
+      var subject = document.querySelector('input[name="_subject"]');
+      if (subject) subject.value = 'Inquiry about “' + piece + '”';
+    })();
+  </script>
 </Base>
 
 <style>

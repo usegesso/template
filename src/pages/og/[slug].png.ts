@@ -28,6 +28,7 @@ export const getStaticPaths = (async () => {
     card('about', name, settings.tagline || 'Portfolio'),
     card('news', 'News', name),
     card('exhibitions', 'Exhibitions', name),
+    card('available', 'Available work', name),
   ];
   for (const s of await getCollection('collections')) {
     cards.push(card(`series-${strip(s.id)}`, s.data.title, name));

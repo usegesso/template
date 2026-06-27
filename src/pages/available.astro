@@ -1,0 +1,92 @@
+---
+import { getCollection, getEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import { CARD_WIDTHS, cardSizes } from '../lib/images';
+import { withBase } from '../lib/href';
+
+// A simple "shop" index of every available piece: thumbnail, title/meta, price,
+// and a Buy or Inquire action. The page only appears in the menu when the artist
+// turns on "Available work" in Design; the per-piece actions follow the same
+// `sellEnabled` switch as the work pages, so this stays a plain price list until
+// the artist opts into selling. Easel never handles money — Buy links go out to
+// the artist's own checkout.
+const settings = (await getEntry('site', 'settings'))!.data;
+const artist = settings.logoText || settings.siteTitle;
+
+const slug = (id: string) => id.replace(/\.md$/, '');
+const available = (await getCollection('artworks'))
+  .filter((a) => a.data.status === 'available')
+  .sort((a, b) => a.data.order - b.data.order);
+
+const inquireHref = (title: string) => `${withBase('/contact/')}?piece=${encodeURIComponent(title)}`;
+---
+
+<Base
+  pageTitle="Available work"
+  pageDescription={`Work available from ${artist}`}
+  pageImage={withBase('/og/available.png')}
+>
+  <div class="ez-container ez-avail">
+    <h1>Available work</h1>
+    {available.length === 0 && (
+      <p class="ez-avail__empty">Nothing listed as available right now — check back soon.</p>
+    )}
+    {available.length > 0 && (
+      <ul class="ez-avail__grid" role="list">
+        {available.map((entry) => {
+          const a = entry.data;
+          const meta = [a.year, a.medium, a.dimensions].filter(Boolean).join(' · ');
+          return (
+            <li class="ez-avail__item">
+              <a class="ez-avail__media" href={withBase(`/work/${slug(entry.id)}/`)} aria-label={`View ${a.title}`}>
+                <Image src={a.image} alt={a.alt} widths={CARD_WIDTHS} sizes={cardSizes(3)} loading="lazy" class="ez-avail__img" />
+              </a>
+              <div class="ez-avail__body">
+                <h2 class="ez-avail__title">
+                  <a href={withBase(`/work/${slug(entry.id)}/`)}>{a.title}</a>
+                </h2>
+                {meta && <p class="ez-avail__meta">{meta}</p>}
+                {a.price && <p class="ez-avail__price">{a.price}</p>}
+                {settings.sellEnabled && (
+                  a.buyLink ? (
+                    <a class="ez-btn ez-btn--primary ez-avail__action" href={a.buyLink} rel="noopener" target="_blank">Buy</a>
+                  ) : (
+                    <a class="ez-btn ez-btn--primary ez-avail__action" href={inquireHref(a.title)}>Inquire</a>
+                  )
+                )}
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+    )}
+  </div>
+</Base>
+
+<style>
+  .ez-avail__empty { color: var(--ez-stone); }
+  .ez-avail__grid {
+    list-style: none;
+    margin: var(--ez-space-6) 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(var(--ez-item-min), 1fr));
+    gap: var(--ez-gallery-gap);
+  }
+  .ez-avail__item {
+    background: var(--ez-white);
+    border: var(--ez-border-width) solid var(--ez-border);
+    display: flex;
+    flex-direction: column;
+  }
+  .ez-avail__media { display: block; border-bottom: var(--ez-border-width) solid var(--ez-border); background: var(--ez-paper); }
+  .ez-avail__img { width: 100%; height: auto; display: block; }
+  .ez-avail__body { padding: var(--ez-space-4); display: flex; flex-direction: column; gap: var(--ez-space-2); flex: 1; }
+  .ez-avail__title { font-size: var(--ez-text-lg); margin: 0; }
+  .ez-avail__title a { text-decoration: none; color: var(--ez-ink); }
+  .ez-avail__title a:hover { color: var(--ez-blue); }
+  .ez-avail__meta { margin: 0; color: var(--ez-stone); font-size: var(--ez-text-sm); }
+  .ez-avail__price { margin: 0; font-family: var(--ez-font-display); font-weight: 700; color: var(--ez-blue); }
+  .ez-avail__action { margin-top: auto; align-self: flex-start; text-decoration: none; }
+</style>

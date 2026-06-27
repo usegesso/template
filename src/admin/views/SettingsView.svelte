@@ -110,6 +110,13 @@
   </div>
 
   <div class="ez-block">
+    <strong>Selling</strong>
+    <p class="ez-help">Show a button on each piece that's for sale. Pieces with a Buy / shop link get a <strong>Buy</strong> button; the rest get an <strong>Inquire</strong> button that opens your contact form with the piece's title filled in. Set each piece's link and availability under Artworks.</p>
+    <label class="ez-field ez-field--check"><input type="checkbox" bind:checked={s.sellEnabled} />
+      <span>Show Buy / Inquire buttons on pieces for sale</span></label>
+  </div>
+
+  <div class="ez-block">
     <strong>Newsletter</strong>
     <p class="ez-help">Collect email addresses from visitors. Signups are delivered to your inbox (or, if your site is on Netlify, to your Netlify dashboard under Forms).</p>
     <label class="ez-field ez-field--check"><input type="checkbox" bind:checked={s.newsletterEnabled} />

@@ -26,6 +26,9 @@ export interface Artwork {
   dimensions?: string;
   status: 'available' | 'sold' | 'inquire' | 'nfs';
   price?: string;
+  /** Optional external buy link (Stripe/Gumroad/Etsy/…). Shown as a Buy button
+   *  on available pieces when the site's `sellEnabled` setting is on. */
+  buyLink?: string;
   alt: string;
   collection?: string; // series id
   /** Optional YouTube/Vimeo URL — plays on the artwork's own page. */
@@ -115,6 +118,7 @@ export interface Settings {
   socialLinks: { label: string; url: string }[];
   cfAnalyticsToken?: string;
   analyticsSnippet?: string;
+  sellEnabled?: boolean;
   newsletterEnabled?: boolean;
   newsletterHeading?: string;
   newsletterBlurb?: string;

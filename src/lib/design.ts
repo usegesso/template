@@ -56,7 +56,7 @@ export interface DesignTokens {
   hero: { enabled: boolean; align: 'left' | 'center'; size: 'small' | 'large' };
   footer: { socials: boolean; credit: boolean; text?: string };
   favicon: { mode: 'initials' | 'image'; image?: string };
-  pages: { about: boolean; contact: boolean; cv: boolean; press: boolean; exhibitions: boolean; news: boolean };
+  pages: { about: boolean; contact: boolean; cv: boolean; press: boolean; exhibitions: boolean; news: boolean; available: boolean };
 }
 
 export const DEFAULT_DESIGN: DesignTokens = {
@@ -92,7 +92,7 @@ export const DEFAULT_DESIGN: DesignTokens = {
   hero: { enabled: false, align: 'left', size: 'small' },
   footer: { socials: true, credit: true },
   favicon: { mode: 'initials' },
-  pages: { about: true, contact: true, cv: true, press: true, exhibitions: false, news: false },
+  pages: { about: true, contact: true, cv: true, press: true, exhibitions: false, news: false, available: false },
 };
 
 /** Deep-merge a partial design over a base token bundle. */
@@ -185,7 +185,7 @@ export function designVars(d: DesignTokens): string {
 
 /** Root classes that switch structural variants (so they preview live via CSS). */
 export function designClasses(d: DesignTokens): string {
-  const pages = ['about', 'contact', 'cv', 'press', 'exhibitions', 'news'] as const;
+  const pages = ['about', 'contact', 'cv', 'press', 'exhibitions', 'news', 'available'] as const;
   return [
     `ez-nav-${d.nav.layout}`,
     `ez-thumb-${d.thumb.hover}`,

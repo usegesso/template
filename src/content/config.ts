@@ -25,6 +25,11 @@ const artworks = defineCollection({
       status: statusEnum.default('available'),
       // Price is only meaningful / shown when status is "available".
       price: z.string().optional(),
+      // Optional external "buy" link (Stripe Payment Link, Gumroad, Etsy, Big
+      // Cartel, …). When the piece is available and this is set, the work page
+      // shows a Buy button; otherwise an Inquire button. Only acts when the
+      // site's `sellEnabled` setting is on. Easel never handles money itself.
+      buyLink: z.string().url().optional(),
       // Required for SEO + accessibility; prompted in the CMS.
       alt: z.string(),
       // Optional time-based media: a YouTube or Vimeo URL. The still image above is
@@ -169,6 +174,10 @@ const site = defineCollection({
     // power users who want GA/Plausible/etc.
     cfAnalyticsToken: z.string().optional(),
     analyticsSnippet: z.string().optional(),
+    // Commerce: when on, available/inquire pieces show a Buy or Inquire button
+    // (Buy when the piece carries a buyLink, otherwise a prefilled contact link).
+    // Off by default, so existing sites are unchanged until the artist opts in.
+    sellEnabled: z.boolean().default(false),
     // Newsletter signup (Netlify Forms). When enabled, a signup block renders.
     newsletterEnabled: z.boolean().default(false),
     newsletterHeading: z.string().optional(),

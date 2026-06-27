@@ -14,6 +14,7 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 // editor can toggle them live. `key` matches the ez-page-<key>-off classes.
 const links = [
   { href: '/', label: 'Work', key: 'work' },
+  { href: '/available', label: 'Available', key: 'available' },
   { href: '/about', label: 'About', key: 'about' },
   { href: '/cv', label: 'CV', key: 'cv' },
   { href: '/press', label: 'Press', key: 'press' },
@@ -73,7 +74,8 @@ const isActive = (href: string) => {
   :global(html.ez-page-cv-off) .ez-pagelink-cv,
   :global(html.ez-page-press-off) .ez-pagelink-press,
   :global(html.ez-page-exhibitions-off) .ez-pagelink-exhibitions,
-  :global(html.ez-page-news-off) .ez-pagelink-news { display: none; }
+  :global(html.ez-page-news-off) .ez-pagelink-news,
+  :global(html.ez-page-available-off) .ez-pagelink-available { display: none; }
 
   /* Top layout: name on its own centered row, links centered below. */
   :global(html.ez-nav-top) .ez-nav { position: relative; }

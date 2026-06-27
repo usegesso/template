@@ -293,6 +293,7 @@
           <label class="ez-field--check"><input type="checkbox" bind:checked={d.pages.press} /><span>Press</span></label>
           <label class="ez-field--check"><input type="checkbox" bind:checked={d.pages.exhibitions} /><span>Exhibitions</span></label>
           <label class="ez-field--check"><input type="checkbox" bind:checked={d.pages.news} /><span>News</span></label>
+          <label class="ez-field--check"><input type="checkbox" bind:checked={d.pages.available} /><span>Available work</span></label>
         </div>
       </section>
 

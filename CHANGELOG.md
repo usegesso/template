@@ -7,6 +7,19 @@ newer version includes before they choose to update.
 Every update is opt-in and non-destructive: your artwork, pages, settings, and style are
 always preserved, and new features stay off until you turn them on.
 
+## 0.15.0
+
+- **Sell or take inquiries on pieces.** Turn on "Show Buy / Inquire buttons" under
+  Settings, and every available piece gets a button. Add a shop link to a piece (Stripe,
+  Gumroad, Etsy, Big Cartel) and it becomes a **Buy** button that sends buyers to your own
+  checkout. Leave the link blank and it becomes an **Inquire** button that opens your
+  contact form with the piece's title already filled in. Easel never handles the money, it
+  just points people to the right place. Off by default, so nothing changes until you turn
+  it on.
+- **Optional "Available work" page.** Add a single page that lists everything you have for
+  sale, with prices and a Buy or Inquire button on each. Turn it on under Design, next to
+  your other page options.
+
 ## 0.14.0
 
 - **Updates no longer stall publishing on GitHub Pages.** On Pages-hosted sites, running

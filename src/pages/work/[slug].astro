@@ -121,6 +121,14 @@ const jsonLd = [
         {metaParts.length > 0 && <p class="ez-work__meta">{metaParts.join(' · ')}</p>}
         {a.status === 'available' && a.price && <p class="ez-work__price">{a.price}</p>}
 
+        {settings.sellEnabled && (a.status === 'available' || a.status === 'inquire') && (
+          a.status === 'available' && a.buyLink ? (
+            <a class="ez-btn ez-btn--primary ez-work__buy" href={a.buyLink} rel="noopener" target="_blank">Buy this piece</a>
+          ) : (
+            <a class="ez-btn ez-btn--primary ez-work__buy" href={`${withBase('/contact/')}?piece=${encodeURIComponent(a.title)}`}>Inquire about this piece</a>
+          )
+        )}
+
         <div class="ez-work__body">
           <Content />
         </div>
@@ -210,6 +218,7 @@ const jsonLd = [
     margin: var(--ez-space-2) 0 0;
     font-size: var(--ez-text-lg);
   }
+  .ez-work__buy { display: inline-block; margin-top: var(--ez-space-4); text-decoration: none; }
   .ez-work__body { margin-top: var(--ez-space-5); line-height: 1.7; }
   .ez-work__body :global(p) { margin: 0 0 var(--ez-space-3); }
   .ez-work__nav {
