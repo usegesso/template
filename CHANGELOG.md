@@ -7,6 +7,13 @@ newer version includes before they choose to update.
 Every update is opt-in and non-destructive: your artwork, pages, settings, and style are
 always preserved, and new features stay off until you turn them on.
 
+## 0.24.0
+
+- **Audio and video on your work.** A piece can now carry a video (YouTube, Vimeo) or
+  audio (SoundCloud, Bandcamp, or a direct audio file), and a play badge marks it in your
+  gallery so musicians, filmmakers, and sound artists can use Easel too. Your cover photo stays
+  the thumbnail. Off until you add a link to a piece.
+
 ## 0.23.0
 
 - **A stronger link-in-bio page.** Your /links page can now feature one link as a

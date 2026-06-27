@@ -34,6 +34,9 @@ export interface Artwork {
   collection?: string; // series id
   /** Optional YouTube/Vimeo URL — plays on the artwork's own page. */
   video?: string;
+  /** Optional audio: a SoundCloud/Bandcamp link or a direct audio file URL —
+   *  plays on the artwork's own page. */
+  audio?: string;
   order: number;
   featured: boolean;
   body: string;

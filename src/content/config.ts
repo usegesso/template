@@ -35,6 +35,11 @@ const artworks = defineCollection({
       // Optional time-based media: a YouTube or Vimeo URL. The still image above is
       // the thumbnail/poster; the embed plays on the artwork's own page.
       video: z.string().url().optional(),
+      // Optional audio: a SoundCloud track URL, a Bandcamp EmbeddedPlayer URL, or a
+      // direct audio file URL (.mp3/.ogg/.wav/.m4a). Plays on the artwork's own page,
+      // so sound artists and musicians can present a piece. The still image stays the
+      // cover/thumbnail. Off unless set.
+      audio: z.string().url().optional(),
       // Optional series tag — references a `collections` entry by slug.
       collection: reference('collections').optional(),
       // Manual sort, set by drag-reorder in the CMS.

@@ -201,6 +201,12 @@
     <span class="ez-help">Paste a YouTube or Vimeo link to add a video on this piece's page. The photo above is the thumbnail.</span>
   </label>
 
+  <label class="ez-field">
+    <span class="ez-label">Audio (optional)</span>
+    <input class="ez-input" bind:value={form.audio} placeholder="https://soundcloud.com/… or a link to an .mp3" />
+    <span class="ez-help">Paste a SoundCloud or Bandcamp link, or a direct link to an audio file, to add a player on this piece's page. Good for music and sound art. The photo above stays the cover.</span>
+  </label>
+
   <label class="ez-field ez-field--check">
     <input type="checkbox" bind:checked={form.featured} />
     <span>Feature this piece at the top of my homepage</span>

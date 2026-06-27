@@ -81,6 +81,8 @@ const lightboxItems = await Promise.all(
               series={a.data.collection ? slugify(a.data.collection.id) : undefined}
               index={i}
               href={linkToPage ? withBase(`/work/${slugify(a.id)}/`) : undefined}
+              hasVideo={!!a.data.video}
+              hasAudio={!!a.data.audio}
             />
           ))}
         </div>

@@ -8,7 +8,7 @@ import Lightbox from '../../components/Lightbox.astro';
 import NewsletterSignup from '../../components/NewsletterSignup.astro';
 import { FULL_WIDTHS } from '../../lib/images';
 import { visualArtworkLd, breadcrumbLd } from '../../lib/structured-data';
-import { toEmbedSrc } from '../../lib/embed';
+import { toEmbedSrc, toAudioEmbed } from '../../lib/embed';
 import { withBase } from '../../lib/href';
 
 // One indexable, shareable page per artwork. Linked from the gallery when the
@@ -38,6 +38,7 @@ const artistName = settings.logoText || settings.siteTitle;
 
 const metaParts = [a.year, a.medium, a.dimensions].filter(Boolean);
 const embedSrc = a.video ? toEmbedSrc(a.video) : null;
+const audioEmbed = a.audio ? toAudioEmbed(a.audio) : null;
 
 // Absolute URLs for structured data.
 const origin = (Astro.site ?? Astro.url).origin;
@@ -110,6 +111,23 @@ const jsonLd = [
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowfullscreen
             ></iframe>
+          </div>
+        )}
+        {audioEmbed && (
+          <div class="ez-work__audio">
+            {audioEmbed.kind === 'file' ? (
+              <audio controls preload="none" src={audioEmbed.src} class="ez-work__audioel">
+                Your browser does not support audio playback.
+              </audio>
+            ) : (
+              <iframe
+                src={audioEmbed.src}
+                title={`${a.title} — audio`}
+                loading="lazy"
+                allow="autoplay"
+                class="ez-work__audioframe"
+              ></iframe>
+            )}
           </div>
         )}
       </div>
@@ -216,6 +234,13 @@ const jsonLd = [
     width: 100%;
     height: 100%;
     border: 0;
+  }
+  .ez-work__audio { margin-top: var(--ez-space-4); }
+  .ez-work__audioel { width: 100%; }
+  .ez-work__audioframe {
+    width: 100%;
+    height: 166px;
+    border: var(--ez-border-width) solid var(--ez-border);
   }
   .ez-work__head {
     display: flex;

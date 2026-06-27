@@ -20,6 +20,10 @@ interface Props {
   href?: string;
   /** Series slug this piece belongs to — drives the home gallery filter chips. */
   series?: string;
+  /** Show a small ▶ badge — the piece has a video on its page. */
+  hasVideo?: boolean;
+  /** Show a small ♪ badge — the piece has audio on its page. */
+  hasAudio?: boolean;
 }
 const {
   image,
@@ -34,7 +38,11 @@ const {
   index,
   href,
   series,
+  hasVideo,
+  hasAudio,
 } = Astro.props;
+const mediaBadge = hasVideo ? '▶' : hasAudio ? '♪' : null;
+const mediaLabel = hasVideo ? 'Has video' : hasAudio ? 'Has audio' : null;
 
 const metaParts = [year, medium, dimensions].filter(Boolean);
 
@@ -62,6 +70,11 @@ const triggerProps = href
       loading="lazy"
       class="ez-artcard__img"
     />
+    {mediaBadge && (
+      <span class="ez-artcard__media" aria-label={mediaLabel}>
+        <span aria-hidden="true">{mediaBadge}</span>
+      </span>
+    )}
   </Trigger>
 
   <div class="ez-artcard__body">
@@ -98,6 +111,23 @@ const triggerProps = href
     border-radius: var(--ez-radius) var(--ez-radius) 0 0;
   }
   .ez-artcard__trigger--link { cursor: pointer; }
+  .ez-artcard__trigger { position: relative; }
+  /* Media badge: signals a piece carries video or audio that plays on its page. */
+  .ez-artcard__media {
+    position: absolute;
+    top: var(--ez-space-3);
+    right: var(--ez-space-3);
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background: var(--ez-ink);
+    color: #fff;
+    font-size: 0.9rem;
+    line-height: 1;
+    box-shadow: var(--ez-shadow);
+  }
   .ez-artcard__img {
     width: 100%;
     height: auto;
