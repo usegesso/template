@@ -197,6 +197,9 @@ const site = defineCollection({
     linksDisplayName: z.string().optional(),
     linksBio: z.string().optional(),
     links: z.array(bioLink).default([]),
+    // Client-side search (Pagefind). When on, a search box shows in the header and
+    // visitors can search across your work, series, and news. Off by default.
+    searchEnabled: z.boolean().default(false),
     // Privacy-friendly analytics: paste a Cloudflare Web Analytics token and we
     // inject the beacon (no cookie banner needed). The raw snippet below stays for
     // power users who want GA/Plausible/etc.

@@ -4,8 +4,10 @@ import { withBase } from '../lib/href';
 interface Props {
   logoText: string;
   logo?: { mode: 'none' | 'text' | 'image'; image?: string };
+  /** Show the Pagefind search box (assets built into /pagefind/). */
+  search?: boolean;
 }
-const { logoText, logo = { mode: 'none' } } = Astro.props;
+const { logoText, logo = { mode: 'none' }, search = false } = Astro.props;
 
 // Compare against base-aware hrefs — under a GitHub Pages subpath, Astro.url.pathname
 // includes the /<repo> base, so the raw '/about' wouldn't match.
@@ -51,6 +53,8 @@ const isActive = (href: string) => {
         ))}
       </ul>
     </nav>
+
+    {search && <div id="ez-search" class="ez-nav__search"></div>}
   </div>
 </header>
 
@@ -68,6 +72,35 @@ const isActive = (href: string) => {
   .ez-nav__link:hover { border-bottom-color: var(--ez-ink); }
   .ez-nav__link.is-active { border-bottom-color: var(--ez-blue); color: var(--ez-blue); }
   .ez-nav__tools { display: flex; align-items: center; }
+
+  /* Pagefind search box — themed to the artist's design tokens. */
+  .ez-nav__search {
+    flex: 0 1 16rem;
+    min-width: 8rem;
+    --pagefind-ui-primary: var(--ez-blue);
+    --pagefind-ui-text: var(--ez-ink);
+    --pagefind-ui-background: var(--ez-white);
+    --pagefind-ui-border: var(--ez-border);
+    --pagefind-ui-font: var(--ez-font-body);
+    --pagefind-ui-border-radius: var(--ez-radius);
+    --pagefind-ui-border-width: var(--ez-border-width);
+  }
+  /* The results panel can be wide; let it overlay rather than push the layout. */
+  .ez-nav__search :global(.pagefind-ui__drawer) {
+    position: absolute;
+    z-index: 50;
+    right: var(--ez-space-5);
+    left: var(--ez-space-5);
+    background: var(--ez-white);
+    border: var(--ez-border-width) solid var(--ez-border);
+    padding: var(--ez-space-3);
+    max-height: 70vh;
+    overflow: auto;
+  }
+  .ez-nav { position: relative; }
+  @media (max-width: 640px) {
+    .ez-nav__search { flex-basis: 100%; order: 3; }
+  }
 
   /* Hide pages turned off in the editor. */
   :global(html.ez-page-about-off) .ez-pagelink-about,

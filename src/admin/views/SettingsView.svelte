@@ -191,6 +191,13 @@
   </div>
 
   <div class="ez-block">
+    <strong>Search</strong>
+    <p class="ez-help">Add a search box to your header so visitors can find pieces, series, and posts by typing. Best once you have a good number of works. It runs in the browser, with nothing to set up.</p>
+    <label class="ez-field ez-field--check"><input type="checkbox" bind:checked={s.searchEnabled} />
+      <span>Show a search box in my header</span></label>
+  </div>
+
+  <div class="ez-block">
     <strong>Visitor analytics</strong>
     <p class="ez-help">See how many people visit, privately — no cookie banner needed. Turn on Web Analytics in your Cloudflare dashboard, then paste the token here.</p>
     <label class="ez-field"><span class="ez-label">Cloudflare Web Analytics token</span>

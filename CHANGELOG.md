@@ -7,6 +7,13 @@ newer version includes before they choose to update.
 Every update is opt-in and non-destructive: your artwork, pages, settings, and style are
 always preserved, and new features stay off until you turn them on.
 
+## 0.20.0
+
+- **Search your work.** Turn on a search box in your header and visitors can find pieces,
+  series, and posts by typing a word or two. It runs right in the browser, so there's
+  nothing to set up and no monthly cost. Most useful once your portfolio grows past a
+  couple dozen pieces. Off by default; turn it on under Settings.
+
 ## 0.19.0
 
 - **Click to zoom into detail.** Turn on zoom and visitors can click an image in the

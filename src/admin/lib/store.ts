@@ -415,6 +415,7 @@ export async function loadSettings(gh: GitHub): Promise<Settings> {
     linksDisplayName: data.linksDisplayName,
     linksBio: data.linksBio,
     links: Array.isArray(data.links) ? data.links : [],
+    searchEnabled: !!data.searchEnabled,
     cfAnalyticsToken: data.cfAnalyticsToken,
     analyticsSnippet: data.analyticsSnippet,
     sellEnabled: !!data.sellEnabled,

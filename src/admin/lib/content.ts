@@ -130,6 +130,7 @@ export interface Settings {
   linksDisplayName?: string;
   linksBio?: string;
   links?: { label: string; url: string; icon?: string }[];
+  searchEnabled?: boolean;
   cfAnalyticsToken?: string;
   analyticsSnippet?: string;
   sellEnabled?: boolean;
