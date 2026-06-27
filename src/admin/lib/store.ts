@@ -137,21 +137,30 @@ function titleFromFilename(name: string): string {
   );
 }
 
+/** One staged piece in the bulk-add queue: an image plus its (editable) details. */
+export interface BulkDraft {
+  file: File;
+  title: string;
+  alt: string;
+  year?: number;
+  medium?: string;
+}
+
 /**
- * Add many photos at once in a SINGLE commit (so the site rebuilds once, not N
- * times). Each becomes a draft artwork titled from its filename, ready for the
- * artist to flesh out. The biggest day-2 friction is adding work one-at-a-time;
- * this removes it. Returns how many were added.
+ * Add many pieces at once in a SINGLE commit (so the site rebuilds once, not N
+ * times), each with the title/year/medium/alt the artist set in the staging
+ * queue. The biggest day-2 friction is adding work one-at-a-time; this removes it.
+ * Returns how many were added.
  */
-export async function bulkAddArtworks(gh: GitHub, files: File[]): Promise<number> {
-  if (!files.length) return 0;
+export async function bulkAddArtworksDetailed(gh: GitHub, drafts: BulkDraft[]): Promise<number> {
+  if (!drafts.length) return 0;
   const existing = new Set((await gh.listDir(PATHS.artworks)).map((e) => e.name.replace(/\.md$/, '')));
   const startOrder = existing.size;
   const changes: FileChange[] = [];
 
   let i = 0;
-  for (const file of files) {
-    const title = titleFromFilename(file.name);
+  for (const d of drafts) {
+    const title = d.title.trim() || titleFromFilename(d.file.name);
     // Unique id across what's on disk AND what we're adding in this same batch.
     let id = slugify(title);
     if (existing.has(id)) {
@@ -161,27 +170,37 @@ export async function bulkAddArtworks(gh: GitHub, files: File[]): Promise<number
     }
     existing.add(id);
 
-    const ext = (file.name.split('.').pop() ?? 'jpg').toLowerCase();
+    const ext = (d.file.name.split('.').pop() ?? 'jpg').toLowerCase();
     const fname = `${id}-${shortStamp()}.${ext}`;
     const art: Artwork = {
       id,
       image: `${ARTWORK_IMG_REL}/${fname}`,
       title,
+      year: d.year,
+      medium: d.medium?.trim() || undefined,
       status: 'available',
       // Seed alt with the title so the schema's required field is satisfied; the
       // artist should refine it, but a draft shouldn't fail the build.
-      alt: title,
+      alt: d.alt.trim() || title,
       order: startOrder + i,
       featured: false,
       body: '',
     };
-    changes.push({ path: `${ARTWORK_IMG_DIR}/${fname}`, content: await fileToBase64(file), encoding: 'base64' });
+    changes.push({ path: `${ARTWORK_IMG_DIR}/${fname}`, content: await fileToBase64(d.file), encoding: 'base64' });
     changes.push({ path: `${PATHS.artworks}/${id}.md`, content: artworkToMd(art) });
     i++;
   }
 
-  await gh.commit(changes, `Add ${files.length} artwork${files.length > 1 ? 's' : ''}`);
-  return files.length;
+  await gh.commit(changes, `Add ${drafts.length} artwork${drafts.length > 1 ? 's' : ''}`);
+  return drafts.length;
+}
+
+/** Back-compat: add photos with titles derived from their filenames, one commit. */
+export async function bulkAddArtworks(gh: GitHub, files: File[]): Promise<number> {
+  return bulkAddArtworksDetailed(
+    gh,
+    files.map((file) => ({ file, title: titleFromFilename(file.name), alt: '' })),
+  );
 }
 
 /** Persist a new display order by rewriting each artwork's `order`. One commit. */

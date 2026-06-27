@@ -7,6 +7,13 @@ newer version includes before they choose to update.
 Every update is opt-in and non-destructive: your artwork, pages, settings, and style are
 always preserved, and new features stay off until you turn them on.
 
+## 0.26.0
+
+- **Add a whole folder at once.** Drop in many photos and they line up in a review list
+  where you can set each title, year, medium, and description, reorder them, and drop any
+  you don't want, then publish them all in one go. Details like the year and a caption fill
+  in from the photo's own information when it's there, so there's less to type.
+
 ## 0.25.0
 
 - **Tell the story behind a series.** A series page can now open with an intro: a tagline
