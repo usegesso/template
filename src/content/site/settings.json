@@ -10,6 +10,7 @@
   "rightClickProtect": false,
   "watermark": false,
   "watermarkText": "",
+  "protectFromAI": false,
   "ogImage": "/assets/og-default.jpg",
   "metaDescription": "",
   "socialLinks": []

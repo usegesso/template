@@ -408,6 +408,7 @@ export async function loadSettings(gh: GitHub): Promise<Settings> {
     rightClickProtect: !!data.rightClickProtect,
     watermark: !!data.watermark,
     watermarkText: data.watermarkText,
+    protectFromAI: !!data.protectFromAI,
     metaDescription: data.metaDescription,
     ogImage: data.ogImage,
     socialLinks: Array.isArray(data.socialLinks) ? data.socialLinks : [],

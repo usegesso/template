@@ -2,6 +2,7 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import svelte from '@astrojs/svelte';
+import aiProtect from './src/lib/ai-protect-integration.mjs';
 
 // Static portfolio site. The host rebuilds on every editor commit to `main`. The
 // custom Easel editor SPA lives at /admin (Svelte island).
@@ -18,7 +19,7 @@ export default defineConfig({
   // go through withBase() (src/lib/href.ts) so they pick this up.
   base: process.env.BASE_PATH || undefined,
   output: 'static',
-  integrations: [sitemap(), svelte()],
+  integrations: [sitemap(), svelte(), aiProtect()],
   image: {
     // astro:assets uses Sharp at build time to emit responsive, modern formats.
     service: { entrypoint: 'astro/assets/services/sharp' },

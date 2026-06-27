@@ -122,6 +122,8 @@ export interface Settings {
   rightClickProtect: boolean;
   watermark: boolean;
   watermarkText?: string;
+  /** AI-scraper shield: robots/ai.txt opt-out + noai meta + image rights tag. Off by default. */
+  protectFromAI?: boolean;
   metaDescription?: string;
   ogImage?: string;
   socialLinks: { label: string; url: string }[];

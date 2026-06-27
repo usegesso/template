@@ -186,6 +186,11 @@ const site = defineCollection({
     rightClickProtect: z.boolean().default(false),
     watermark: z.boolean().default(false),
     watermarkText: z.string().optional(),
+    // AI-scraper shield. When on, the site serves a robots.txt + ai.txt that ask
+    // known AI training crawlers to keep out, adds a noai/noimageai robots meta
+    // tag, and stamps a "do not train" rights note into images at build time.
+    // Off by default, so existing sites are unchanged until the artist opts in.
+    protectFromAI: z.boolean().default(false),
     // meta
     ogImage: z.string().optional(),
     metaDescription: z.string().optional(),

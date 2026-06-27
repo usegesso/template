@@ -66,6 +66,7 @@ const rssHref = design.pages.news ? withBase('/rss.xml') : undefined;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" href={faviconHref} />
     <meta name="generator" content={Astro.generator} />
+    {settings.protectFromAI && <meta name="robots" content="noai, noimageai" />}
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

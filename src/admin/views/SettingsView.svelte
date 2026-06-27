@@ -32,7 +32,7 @@
 
   let s = $state<Settings>({
     siteTitle: '', logoText: '', theme: 'default', portfolioLayout: 'grid',
-    columns: 3, motionDefault: 'full', rightClickProtect: false, watermark: false, socialLinks: [],
+    columns: 3, motionDefault: 'full', rightClickProtect: false, watermark: false, protectFromAI: false, socialLinks: [],
   });
   let loading = $state(true);
   let savedJson = $state('');
@@ -113,6 +113,12 @@
   {#if s.watermark}
     <label class="ez-field"><span class="ez-label">Watermark text</span>
       <input class="ez-input" bind:value={s.watermarkText} placeholder="© Your Name" /></label>
+  {/if}
+  <label class="ez-field ez-field--check"><input type="checkbox" bind:checked={s.protectFromAI} />
+    <span>Keep AI crawlers out</span></label>
+  {#if s.protectFromAI}
+    <span class="ez-help">Asks known AI training bots to skip your site and tags your images
+      "do not train". This is a request, not a lock, but it is the standard way to opt out.</span>
   {/if}
 
   <label class="ez-field"><span class="ez-label">Search description</span>

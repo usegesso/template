@@ -7,6 +7,14 @@ newer version includes before they choose to update.
 Every update is opt-in and non-destructive: your artwork, pages, settings, and style are
 always preserved, and new features stay off until you turn them on.
 
+## 0.21.0
+
+- **Keep AI crawlers out of your work.** Turn on the AI shield and your site asks the
+  known AI training bots (the ones behind ChatGPT, Google, Claude, Perplexity, and others)
+  to stay away, and stamps every image with a "do not train" note that travels with the
+  file. It's a clear opt-out, the same kind big sites use. Off by default; find it under
+  Settings, next to the image protection options.
+
 ## 0.20.0
 
 - **Search your work.** Turn on a search box in your header and visitors can find pieces,
