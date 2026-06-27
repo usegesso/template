@@ -1,7 +1,7 @@
 <script lang="ts">
   import EaselMark from './EaselMark.svelte';
 
-  export type NavId = 'home' | 'work' | 'pages' | 'design' | 'settings' | 'updates';
+  export type NavId = 'home' | 'work' | 'pages' | 'design' | 'settings' | 'history' | 'updates';
 
   let {
     view,
@@ -29,6 +29,7 @@
     { id: 'pages', label: 'Pages', hint: 'About, contact, news…' },
     { id: 'design', label: 'Design', hint: 'How your site looks' },
     { id: 'settings', label: 'Settings', hint: 'Domain, SEO, advanced' },
+    { id: 'history', label: 'History', hint: 'Roll back to an earlier version' },
     { id: 'updates', label: 'Updates', hint: 'Refresh your site’s template' },
   ];
 </script>

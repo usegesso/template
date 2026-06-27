@@ -15,6 +15,7 @@
   import PagesView from './views/PagesView.svelte';
   import DesignView from './views/DesignView.svelte';
   import SettingsView from './views/SettingsView.svelte';
+  import HistoryView from './views/HistoryView.svelte';
   import UpdatesView from './views/UpdatesView.svelte';
   import Wizard from './views/Wizard.svelte';
 
@@ -206,6 +207,7 @@
     pages: 'Pages',
     design: 'Design',
     settings: 'Settings',
+    history: 'History',
     updates: 'Updates',
   };
 </script>
@@ -268,6 +270,8 @@
             <DesignView {gh} {notify} onWizard={() => (wizard = true)} />
           {:else if view === 'settings'}
             <SettingsView {gh} {notify} host={config?.host} repo={config?.repo} />
+          {:else if view === 'history'}
+            <HistoryView {gh} {notify} />
           {:else if view === 'updates'}
             <UpdatesView {gh} {notify} currentVersion={config?.easelVersion ?? null} />
           {/if}

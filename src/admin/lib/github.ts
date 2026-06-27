@@ -216,6 +216,99 @@ export class GitHub {
     return `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${path}`;
   }
 
+  // ---------- Version history (G2) ----------
+
+  /** Recent commits on the branch — the raw material for the editor's History view. */
+  async listCommits(perPage = 25): Promise<{ sha: string; message: string; date: string }[]> {
+    const data = await this.api(`${this.repoPath()}/commits?sha=${this.ref.branch}&per_page=${perPage}`);
+    if (!Array.isArray(data)) return [];
+    return data.map((c: any) => ({
+      sha: c.sha,
+      message: String(c.commit?.message ?? '').split('\n')[0],
+      date: c.commit?.author?.date ?? c.commit?.committer?.date ?? '',
+    }));
+  }
+
+  /** Every blob under the tree of a specific commit sha (not a branch). */
+  private async treeAtCommit(sha: string): Promise<TreeEntry[]> {
+    const base = this.repoPath();
+    const commit = await this.api(`${base}/git/commits/${sha}`);
+    const data = await this.api(`${base}/git/trees/${commit.tree.sha}?recursive=1`);
+    const tree: TreeEntry[] = Array.isArray(data.tree) ? data.tree : [];
+    return tree.filter((t) => t.type === 'blob');
+  }
+
+  /**
+   * Roll the artist's content back to how it stood at `sha`, as a NEW commit on
+   * top of the current tip (never a force-push, so nothing is lost — the rollback
+   * is itself an entry in the history). Only artist content is touched
+   * (src/content, src/assets, public/assets); template code and the deploy
+   * workflow are left alone. Builds the tree from the old blobs' shas directly, so
+   * no file contents are re-uploaded. Returns the number of files changed.
+   */
+  async restoreContentTo(sha: string, message: string): Promise<number> {
+    const PREFIXES = ['src/content/', 'src/assets/', 'public/assets/'];
+    const inScope = (p: string) => PREFIXES.some((x) => p.startsWith(x));
+    const [atSha, atHead] = await Promise.all([this.treeAtCommit(sha), this.treeRecursive()]);
+
+    const want = new Map<string, string>(); // path -> blob sha as it was at `sha`
+    for (const t of atSha) if (inScope(t.path)) want.set(t.path, t.sha);
+    const have = new Map<string, string>(); // path -> blob sha now
+    for (const t of atHead) if (inScope(t.path)) have.set(t.path, t.sha);
+
+    const tree: any[] = [];
+    for (const [path, blobSha] of want) {
+      if (have.get(path) !== blobSha) tree.push({ path, mode: '100644', type: 'blob', sha: blobSha });
+    }
+    for (const path of have.keys()) {
+      if (!want.has(path)) tree.push({ path, mode: '100644', type: 'blob', sha: null });
+    }
+    if (!tree.length) return 0;
+
+    const run = this.commitChain.then(() => this._pushTree(tree, message));
+    this.commitChain = run.catch(() => {});
+    await run;
+    // Restored blobs are written by sha, so we can't seed the overlay with content;
+    // drop any stale overlay entries for touched paths so later reads hit the network.
+    for (const e of tree) this.overlay.delete(e.path);
+    return tree.length;
+  }
+
+  /** Push a prebuilt git tree (entries already carry blob shas) as one commit. */
+  private async _pushTree(treeEntries: any[], message: string): Promise<void> {
+    const base = this.repoPath();
+    let lastErr: unknown;
+    for (let attempt = 0; attempt < 5; attempt++) {
+      const ref = await this.api(`${base}/git/ref/heads/${this.ref.branch}`);
+      const latest = ref.object.sha;
+      const headCommit = await this.api(`${base}/git/commits/${latest}`);
+      const newTree = await this.api(`${base}/git/trees`, {
+        method: 'POST',
+        body: JSON.stringify({ base_tree: headCommit.tree.sha, tree: treeEntries }),
+      });
+      const newCommit = await this.api(`${base}/git/commits`, {
+        method: 'POST',
+        body: JSON.stringify({ message, tree: newTree.sha, parents: [latest] }),
+      });
+      try {
+        await this.api(`${base}/git/refs/heads/${this.ref.branch}`, {
+          method: 'PATCH',
+          body: JSON.stringify({ sha: newCommit.sha }),
+        });
+        this.lastCommitSha = newCommit.sha;
+        return;
+      } catch (e) {
+        lastErr = e;
+        if (e instanceof Error && /\(422\)/.test(e.message) && /fast forward/i.test(e.message)) {
+          await new Promise((r) => setTimeout(r, 400 * (attempt + 1)));
+          continue;
+        }
+        throw e;
+      }
+    }
+    throw lastErr instanceof Error ? lastErr : new Error('restore failed: branch kept moving');
+  }
+
   /**
    * Commit a set of file changes (create/update/delete) as a single commit on the
    * branch, via the Git Data API.

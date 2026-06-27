@@ -7,6 +7,13 @@ newer version includes before they choose to update.
 Every update is opt-in and non-destructive: your artwork, pages, settings, and style are
 always preserved, and new features stay off until you turn them on.
 
+## 0.31.0
+
+- **Roll back to an earlier version.** A new History section lists a snapshot from every
+  time you saved. Made a change you regret? Pick an earlier point and restore it in one
+  click. Your later work is kept too, so you can always undo a rollback. It asks you to
+  confirm first, and it only touches your content, never your site's design code.
+
 ## 0.30.0
 
 - **A CV that keeps itself current.** Turn on "Fill my CV's exhibitions from my Exhibitions
