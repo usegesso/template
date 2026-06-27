@@ -53,7 +53,12 @@
 
   async function save(): Promise<boolean> {
     try {
-      await saveSettings(gh, $state.snapshot(s) as Settings);
+      const snap = $state.snapshot(s) as Settings;
+      // Drop incomplete /links rows — a blank URL would fail the build's schema.
+      if (Array.isArray(snap.links)) {
+        snap.links = snap.links.filter((l) => l.url?.trim() && l.label?.trim());
+      }
+      await saveSettings(gh, snap);
       savedJson = JSON.stringify($state.snapshot(s));
       notify('Settings saved. Your site will update shortly.');
       return true;
@@ -107,6 +112,32 @@
         <button class="ez-btn ez-btn--sm ez-btn--ghost" onclick={() => (s.socialLinks = s.socialLinks.filter((_, j) => j !== i))}>×</button>
       </div>
     {/each}
+  </div>
+
+  <div class="ez-block">
+    <strong>Link in bio (/links)</strong>
+    <p class="ez-help">A single shareable page at <strong>yoursite/links</strong> with big tappable buttons — the one link you put in your Instagram or TikTok bio. It uses your site's colours and fonts. It stays out of your main menu; people reach it only through the link you share.</p>
+    <label class="ez-field ez-field--check"><input type="checkbox" bind:checked={s.linksEnabled} />
+      <span>Turn on my /links page</span></label>
+    {#if s.linksEnabled}
+      <label class="ez-field"><span class="ez-label">Name shown on the page</span>
+        <input class="ez-input" bind:value={s.linksDisplayName} placeholder="Your name (defaults to your site name)" /></label>
+      <label class="ez-field"><span class="ez-label">Short bio</span>
+        <input class="ez-input" bind:value={s.linksBio} placeholder="Painter in Austin. Commissions open." /></label>
+      <div class="ez-block__head" style="margin-top:.5rem"><strong>Links</strong>
+        <button class="ez-btn ez-btn--sm" onclick={() => (s.links = [...(s.links ?? []), { label: '', url: '', icon: '' }])}>Add link</button></div>
+      {#each s.links ?? [] as link, i (i)}
+        <div class="ez-row">
+          <input class="ez-input" style="max-width:3.5rem" bind:value={link.icon} placeholder="🔗" aria-label="Emoji" />
+          <input class="ez-input" style="max-width:11rem" bind:value={link.label} placeholder="My shop" />
+          <input class="ez-input" bind:value={link.url} placeholder="https://…" />
+          <button class="ez-btn ez-btn--sm" onclick={() => { if (i > 0) { const n = [...s.links]; [n[i-1], n[i]] = [n[i], n[i-1]]; s.links = n; } }} disabled={i === 0} aria-label="Move up">↑</button>
+          <button class="ez-btn ez-btn--sm" onclick={() => { if (i < s.links.length - 1) { const n = [...s.links]; [n[i+1], n[i]] = [n[i], n[i+1]]; s.links = n; } }} disabled={i === (s.links?.length ?? 0) - 1} aria-label="Move down">↓</button>
+          <button class="ez-btn ez-btn--sm ez-btn--ghost" onclick={() => (s.links = s.links.filter((_, j) => j !== i))} aria-label="Remove">×</button>
+        </div>
+      {/each}
+      <p class="ez-help">Your social links (above) show automatically at the bottom of the page.</p>
+    {/if}
   </div>
 
   <div class="ez-block">

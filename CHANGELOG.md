@@ -7,6 +7,14 @@ newer version includes before they choose to update.
 Every update is opt-in and non-destructive: your artwork, pages, settings, and style are
 always preserved, and new features stay off until you turn them on.
 
+## 0.16.0
+
+- **A "link in bio" page.** Turn on a single page at yoursite/links with big tappable
+  buttons, the one link you put in your Instagram or TikTok bio. It uses your site's
+  colours and fonts, shows your photo and a short bio, and lists your social links at the
+  bottom. It stays out of your main menu, so people only reach it through the link you
+  share. Off by default. Find it under Settings.
+
 ## 0.15.0
 
 - **Sell or take inquiries on pieces.** Turn on "Show Buy / Inquire buttons" under

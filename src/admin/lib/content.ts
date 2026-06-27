@@ -116,6 +116,11 @@ export interface Settings {
   metaDescription?: string;
   ogImage?: string;
   socialLinks: { label: string; url: string }[];
+  /** Optional /links "link in bio" page. Unlisted; off until linksEnabled. */
+  linksEnabled?: boolean;
+  linksDisplayName?: string;
+  linksBio?: string;
+  links?: { label: string; url: string; icon?: string }[];
   cfAnalyticsToken?: string;
   analyticsSnippet?: string;
   sellEnabled?: boolean;

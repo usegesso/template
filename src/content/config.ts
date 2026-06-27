@@ -139,6 +139,14 @@ const socialLink = z.object({
   url: z.string().url(),
 });
 
+// One row on the optional /links "link in bio" page.
+const bioLink = z.object({
+  label: z.string(),
+  url: z.string().url(),
+  // Optional leading emoji/icon (e.g. "🛒", "📷").
+  icon: z.string().optional(),
+});
+
 // Global settings singleton, stored at src/content/site.json and validated as a
 // single-entry data collection.
 const site = defineCollection({
@@ -169,6 +177,13 @@ const site = defineCollection({
     ogImage: z.string().optional(),
     metaDescription: z.string().optional(),
     socialLinks: z.array(socialLink).default([]),
+    // Optional /links "link in bio" page (a Linktree-style hub to drop in social
+    // bios). Unlisted: it never appears in the site menu, only at the /links URL.
+    // Off by default, so existing sites are unchanged until the artist turns it on.
+    linksEnabled: z.boolean().default(false),
+    linksDisplayName: z.string().optional(),
+    linksBio: z.string().optional(),
+    links: z.array(bioLink).default([]),
     // Privacy-friendly analytics: paste a Cloudflare Web Analytics token and we
     // inject the beacon (no cookie banner needed). The raw snippet below stays for
     // power users who want GA/Plausible/etc.

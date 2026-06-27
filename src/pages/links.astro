@@ -1,0 +1,114 @@
+---
+import { getEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import { withBase } from '../lib/href';
+
+// A "link in bio" hub (Linktree-style) at /links. Unlisted: it's never in the
+// site menu, only reachable at this URL, so the artist can drop it in a social
+// bio. Off by default — when the artist hasn't turned it on, send visitors home
+// rather than serve an empty page.
+const settings = (await getEntry('site', 'settings'))!.data;
+if (!settings.linksEnabled) {
+  return Astro.redirect(withBase('/'));
+}
+
+const about = await getEntry('pages', 'about');
+const portrait = about?.data.portrait;
+
+const name = settings.linksDisplayName || settings.logoText || settings.siteTitle;
+const bio = settings.linksBio || settings.tagline;
+const links = settings.links ?? [];
+const socials = settings.socialLinks ?? [];
+---
+
+<Base pageTitle={name} pageDescription={bio || `Links from ${name}`} pageImage={withBase('/og/links.png')}>
+  <div class="ez-container ez-links">
+    {portrait && (
+      <Image src={portrait} alt={name} widths={[160, 320]} sizes="120px" class="ez-links__avatar" />
+    )}
+    <h1 class="ez-links__name">{name}</h1>
+    {bio && <p class="ez-links__bio">{bio}</p>}
+
+    {links.length > 0 && (
+      <ul class="ez-links__list" role="list">
+        {links.map((link) => (
+          <li>
+            <a class="ez-links__btn" href={link.url} rel="noopener" target="_blank">
+              {link.icon && <span class="ez-links__icon" aria-hidden="true">{link.icon}</span>}
+              <span class="ez-links__label">{link.label}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
+
+    {socials.length > 0 && (
+      <ul class="ez-links__socials" role="list">
+        {socials.map((s) => (
+          <li><a href={s.url} rel="noopener" target="_blank">{s.label}</a></li>
+        ))}
+      </ul>
+    )}
+  </div>
+</Base>
+
+<style>
+  .ez-links {
+    max-width: 480px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--ez-space-3);
+  }
+  .ez-links__avatar {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: var(--ez-border-width) solid var(--ez-border);
+    background: var(--ez-paper);
+  }
+  .ez-links__name { margin: var(--ez-space-2) 0 0; }
+  .ez-links__bio { margin: 0; color: var(--ez-stone); }
+  .ez-links__list {
+    list-style: none;
+    margin: var(--ez-space-5) 0 0;
+    padding: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--ez-space-3);
+  }
+  .ez-links__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--ez-space-3);
+    width: 100%;
+    padding: var(--ez-space-4);
+    background: var(--ez-white);
+    color: var(--ez-ink);
+    border: var(--ez-border-width) solid var(--ez-border);
+    border-radius: var(--ez-radius);
+    box-shadow: var(--ez-shadow);
+    font-family: var(--ez-font-display);
+    font-weight: 700;
+    text-decoration: none;
+    transition: transform var(--ez-motion-base, 0.15s) var(--ez-ease, ease);
+  }
+  .ez-links__btn:hover { transform: translateY(-2px); color: var(--ez-link); }
+  .ez-links__icon { font-size: 1.25em; line-height: 1; }
+  .ez-links__socials {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--ez-space-4);
+    margin: var(--ez-space-5) 0 0;
+    padding: 0;
+  }
+  .ez-links__socials a { color: var(--ez-stone); text-decoration: none; font-size: var(--ez-text-sm); }
+  .ez-links__socials a:hover { color: var(--ez-link); }
+</style>
