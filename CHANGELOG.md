@@ -7,6 +7,12 @@ newer version includes before they choose to update.
 Every update is opt-in and non-destructive: your artwork, pages, settings, and style are
 always preserved, and new features stay off until you turn them on.
 
+## 0.33.0
+
+- **Share a piece in a tap.** Every artwork page now has a Share button that opens your
+  phone's share sheet (or copies the link on a computer), and a Story image you can
+  download, a clean, branded image sized for Instagram and TikTok stories, ready to post.
+
 ## 0.32.0
 
 - **Use Glaze and Nightshade with confidence.** Protected an image with one of these tools?

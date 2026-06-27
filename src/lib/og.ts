@@ -22,8 +22,13 @@ const FONTS = [
   { name: 'Jost', weight: 600 as const, style: 'normal' as const, data: loadFont(600) },
 ];
 
-const WIDTH = 1200;
-const HEIGHT = 630;
+// Landscape = OpenGraph/Twitter cards (link previews). Story = a 9:16 image the
+// artist downloads to post to an Instagram/TikTok story.
+const DIMS = {
+  landscape: { width: 1200, height: 630 },
+  story: { width: 1080, height: 1920 },
+} as const;
+export type CardFormat = keyof typeof DIMS;
 
 export interface CardColors {
   accent: string;
@@ -35,12 +40,17 @@ export interface ShareCardInput {
   title: string;
   subtitle: string;
   colors: CardColors;
+  format?: CardFormat;
 }
 
-export async function renderShareCard({ title, subtitle, colors }: ShareCardInput): Promise<Buffer> {
+export async function renderShareCard({ title, subtitle, colors, format = 'landscape' }: ShareCardInput): Promise<Buffer> {
+  const { width: WIDTH, height: HEIGHT } = DIMS[format];
+  const story = format === 'story';
   // Scale the headline down for long titles so they never overflow vertically.
   const len = title.length;
-  const titleSize = len > 60 ? 52 : len > 38 ? 62 : 78;
+  const titleSize = story
+    ? len > 60 ? 84 : len > 38 ? 104 : 128
+    : len > 60 ? 52 : len > 38 ? 62 : 78;
 
   const tree = {
     type: 'div',
@@ -51,7 +61,7 @@ export async function renderShareCard({ title, subtitle, colors }: ShareCardInpu
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        padding: '72px',
+        padding: story ? '110px 96px' : '72px',
         background: colors.paper,
         fontFamily: 'Jost',
       },
@@ -59,7 +69,7 @@ export async function renderShareCard({ title, subtitle, colors }: ShareCardInpu
         // Bauhaus accent bar.
         {
           type: 'div',
-          props: { style: { display: 'flex', width: '132px', height: '22px', background: colors.accent } },
+          props: { style: { display: 'flex', width: story ? '200px' : '132px', height: story ? '32px' : '22px', background: colors.accent } },
         },
         {
           type: 'div',
@@ -83,7 +93,7 @@ export async function renderShareCard({ title, subtitle, colors }: ShareCardInpu
               {
                 type: 'div',
                 props: {
-                  style: { display: 'flex', marginTop: '24px', fontSize: '34px', fontWeight: 600, color: colors.accent },
+                  style: { display: 'flex', marginTop: story ? '40px' : '24px', fontSize: story ? '52px' : '34px', fontWeight: 600, color: colors.accent },
                   children: subtitle,
                 },
               },
