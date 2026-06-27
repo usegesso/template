@@ -223,6 +223,11 @@ const site = defineCollection({
     // the paste-in action URL, so signups land directly in the artist's list.
     newsletterProvider: z.enum(['netlify', 'buttondown', 'mailchimp', 'convertkit']).default('netlify'),
     newsletterActionUrl: z.string().url().optional(),
+    // Ambient placements for the same signup, each off by default. They reuse the
+    // newsletter plumbing above, so nothing new to configure: footer shows the
+    // signup site-wide; work pages show a "follow new work" prompt under each piece.
+    newsletterInFooter: z.boolean().default(false),
+    newsletterOnWork: z.boolean().default(false),
     // Power-user escape hatches (the artist's own site).
     customCss: z.string().optional(),
     customCode: z.string().optional(),

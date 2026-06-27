@@ -15,9 +15,14 @@ interface Props {
   provider?: 'netlify' | 'buttondown' | 'mailchimp' | 'convertkit';
   /** The provider's form action URL (required when provider isn't 'netlify'). */
   actionUrl?: string;
+  /** Tighter styling for ambient placements (footer, work pages). */
+  compact?: boolean;
+  /** Unique id base so several signups can coexist on one page without clashing. */
+  formId?: string;
 }
-const { heading, blurb, provider = 'netlify', actionUrl } = Astro.props;
+const { heading, blurb, provider = 'netlify', actionUrl, compact = false, formId = 'newsletter' } = Astro.props;
 const { useNetlifyForms, formEndpoint } = hostConfig();
+const emailId = `${formId}-email`;
 
 // Use an external provider only when one is chosen AND an action URL is present;
 // otherwise fall back to the built-in form backend (Netlify Forms / FormSubmit).
@@ -27,7 +32,7 @@ const emailField =
   provider === 'mailchimp' ? 'EMAIL' : provider === 'convertkit' ? 'email_address' : 'email';
 ---
 
-<section class="ez-newsletter" aria-label="Newsletter signup">
+<section class={`ez-newsletter${compact ? ' ez-newsletter--compact' : ''}`} aria-label="Newsletter signup">
   <div class="ez-newsletter__inner">
     <h2 class="ez-newsletter__title">{heading || 'Stay in the loop'}</h2>
     {blurb && <p class="ez-newsletter__blurb">{blurb}</p>}
@@ -38,10 +43,10 @@ const emailField =
         target="_blank"
         class="ez-newsletter__form"
       >
-        <label class="ez-visually-hidden" for="newsletter-email">Email address</label>
+        <label class="ez-visually-hidden" for={emailId}>Email address</label>
         <input
           class="ez-input ez-newsletter__email"
-          id="newsletter-email"
+          id={emailId}
           type="email"
           name={emailField}
           placeholder="you@example.com"
@@ -72,10 +77,10 @@ const emailField =
             <input type="text" name="_honey" class="ez-visually-hidden" tabindex="-1" autocomplete="off" aria-hidden="true" />
           </>
         )}
-        <label class="ez-visually-hidden" for="newsletter-email">Email address</label>
+        <label class="ez-visually-hidden" for={emailId}>Email address</label>
         <input
           class="ez-input ez-newsletter__email"
-          id="newsletter-email"
+          id={emailId}
           type="email"
           name="email"
           placeholder="you@example.com"
@@ -103,4 +108,13 @@ const emailField =
     flex-wrap: wrap;
   }
   .ez-newsletter__email { flex: 1 1 16rem; }
+
+  /* Ambient placements (footer, work pages): quieter, no top rule/extra margin. */
+  .ez-newsletter--compact {
+    border-top: 0;
+    margin-top: 0;
+    padding-top: 0;
+  }
+  .ez-newsletter--compact .ez-newsletter__title { font-size: var(--ez-text-md, 1.05rem); }
+  .ez-newsletter--compact .ez-newsletter__inner { max-width: 28rem; }
 </style>

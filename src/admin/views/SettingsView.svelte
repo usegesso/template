@@ -193,6 +193,10 @@
           <input class="ez-input ez-mono" bind:value={s.newsletterActionUrl} placeholder="https://…" />
           <span class="ez-help">In your provider, create an embedded/hosted signup form and copy its form action URL here.</span></label>
       {/if}
+      <label class="ez-field ez-field--check"><input type="checkbox" bind:checked={s.newsletterInFooter} />
+        <span>Also show the signup in my footer (every page)</span></label>
+      <label class="ez-field ez-field--check"><input type="checkbox" bind:checked={s.newsletterOnWork} />
+        <span>Also show a "follow new work" signup under each piece</span></label>
     {/if}
   </div>
 

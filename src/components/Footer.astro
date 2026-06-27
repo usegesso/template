@@ -1,16 +1,37 @@
 ---
+import NewsletterSignup from './NewsletterSignup.astro';
+
 interface Props {
   logoText: string;
   socialLinks?: { label: string; url: string }[];
   footerText?: string;
   /** When set (News page enabled), shows a link to the RSS feed. */
   rssHref?: string;
+  /** Footer email capture (newsletterInFooter). Off unless the artist turns it on. */
+  newsletter?: {
+    heading?: string;
+    blurb?: string;
+    provider?: 'netlify' | 'buttondown' | 'mailchimp' | 'convertkit';
+    actionUrl?: string;
+  } | null;
 }
-const { logoText, socialLinks = [], footerText, rssHref } = Astro.props;
+const { logoText, socialLinks = [], footerText, rssHref, newsletter = null } = Astro.props;
 const year = new Date().getFullYear();
 ---
 
 <footer class="ez-footer">
+  {newsletter && (
+    <div class="ez-container ez-footer__newsletter">
+      <NewsletterSignup
+        compact
+        formId="footer-newsletter"
+        heading={newsletter.heading}
+        blurb={newsletter.blurb}
+        provider={newsletter.provider}
+        actionUrl={newsletter.actionUrl}
+      />
+    </div>
+  )}
   <div class="ez-container ez-footer__inner">
     <div class="ez-footer__brand"><span>{logoText}</span></div>
 
@@ -76,4 +97,8 @@ const year = new Date().getFullYear();
     gap: 0.5rem;
   }
   .ez-footer__text:empty { display: none; }
+  .ez-footer__newsletter {
+    padding-block: var(--ez-space-6);
+    border-bottom: var(--ez-border-width) solid var(--ez-border);
+  }
 </style>

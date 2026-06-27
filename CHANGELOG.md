@@ -7,6 +7,13 @@ newer version includes before they choose to update.
 Every update is opt-in and non-destructive: your artwork, pages, settings, and style are
 always preserved, and new features stay off until you turn them on.
 
+## 0.22.0
+
+- **Let visitors follow your work from anywhere.** Your newsletter signup can now
+  appear in your footer on every page and under each piece, not just on the contact
+  page. It uses the same mailing list you already set up, so there's nothing new to
+  configure. Both placements are off until you turn them on under Settings.
+
 ## 0.21.0
 
 - **Keep AI crawlers out of your work.** Turn on the AI shield and your site asks the

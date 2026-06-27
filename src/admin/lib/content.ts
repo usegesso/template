@@ -141,6 +141,9 @@ export interface Settings {
   newsletterBlurb?: string;
   newsletterProvider?: 'netlify' | 'buttondown' | 'mailchimp' | 'convertkit';
   newsletterActionUrl?: string;
+  /** Ambient placements of the same signup, off by default. */
+  newsletterInFooter?: boolean;
+  newsletterOnWork?: boolean;
   customCss?: string;
   customCode?: string;
   /** Design tokens (theme). Opaque to the editor's basic settings; carried through

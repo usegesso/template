@@ -425,6 +425,8 @@ export async function loadSettings(gh: GitHub): Promise<Settings> {
     newsletterBlurb: data.newsletterBlurb,
     newsletterProvider: data.newsletterProvider ?? 'netlify',
     newsletterActionUrl: data.newsletterActionUrl,
+    newsletterInFooter: !!data.newsletterInFooter,
+    newsletterOnWork: !!data.newsletterOnWork,
     customCss: data.customCss,
     customCode: data.customCode,
     design: data.design,

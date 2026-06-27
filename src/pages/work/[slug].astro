@@ -5,6 +5,7 @@ import { getImage, Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import StatusPill from '../../components/StatusPill.astro';
 import Lightbox from '../../components/Lightbox.astro';
+import NewsletterSignup from '../../components/NewsletterSignup.astro';
 import { FULL_WIDTHS } from '../../lib/images';
 import { visualArtworkLd, breadcrumbLd } from '../../lib/structured-data';
 import { toEmbedSrc } from '../../lib/embed';
@@ -139,6 +140,19 @@ const jsonLd = [
       {prev ? <a class="ez-work__navlink" href={withBase(`/work/${prev.slug}/`)} rel="prev">← {prev.title}</a> : <span />}
       {next ? <a class="ez-work__navlink ez-work__navlink--next" href={withBase(`/work/${next.slug}/`)} rel="next">{next.title} →</a> : <span />}
     </nav>
+
+    {settings.newsletterEnabled && settings.newsletterOnWork && (
+      <div class="ez-work__newsletter">
+        <NewsletterSignup
+          compact
+          formId="work-newsletter"
+          heading={settings.newsletterHeading || 'Follow new work'}
+          blurb={settings.newsletterBlurb || 'Get an email when new pieces and shows go up.'}
+          provider={settings.newsletterProvider}
+          actionUrl={settings.newsletterActionUrl}
+        />
+      </div>
+    )}
   </div>
 
   {hasGallery && <Lightbox items={lightboxItems} />}
@@ -231,6 +245,11 @@ const jsonLd = [
   }
   .ez-work__navlink { font-weight: 700; }
   .ez-work__navlink--next { margin-left: auto; text-align: right; }
+  .ez-work__newsletter {
+    margin-top: var(--ez-space-7);
+    padding-top: var(--ez-space-5);
+    border-top: var(--ez-border-width) solid var(--ez-border);
+  }
 
   @media (max-width: 800px) {
     .ez-work__grid { grid-template-columns: 1fr; gap: var(--ez-space-5); }

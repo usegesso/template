@@ -155,7 +155,20 @@ const rssHref = design.pages.news ? withBase('/rss.xml') : undefined;
       <slot />
     </main>
 
-    <Footer logoText={settings.logoText} socialLinks={settings.socialLinks} footerText={design.footer.text} rssHref={rssHref} />
+    <Footer
+      logoText={settings.logoText}
+      socialLinks={settings.socialLinks}
+      footerText={design.footer.text}
+      rssHref={rssHref}
+      newsletter={settings.newsletterEnabled && settings.newsletterInFooter
+        ? {
+            heading: settings.newsletterHeading,
+            blurb: settings.newsletterBlurb,
+            provider: settings.newsletterProvider,
+            actionUrl: settings.newsletterActionUrl,
+          }
+        : null}
+    />
 
     {settings.rightClickProtect && (
       <script is:inline>

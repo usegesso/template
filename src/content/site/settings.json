@@ -11,6 +11,8 @@
   "watermark": false,
   "watermarkText": "",
   "protectFromAI": false,
+  "newsletterInFooter": false,
+  "newsletterOnWork": false,
   "ogImage": "/assets/og-default.jpg",
   "metaDescription": "",
   "socialLinks": []
