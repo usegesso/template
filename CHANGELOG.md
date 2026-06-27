@@ -7,6 +7,13 @@ newer version includes before they choose to update.
 Every update is opt-in and non-destructive: your artwork, pages, settings, and style are
 always preserved, and new features stay off until you turn them on.
 
+## 0.4.0
+
+- **Followers can subscribe to your News.** Your site now publishes an RSS feed, so
+  visitors can follow your updates in a reader and get new posts automatically. A subtle
+  “RSS” link appears in your footer whenever the News page is turned on — nothing changes
+  if you don’t use News.
+
 ## 0.3.1
 
 - **Sign-in that just works.** Fixed the "Sign in with GitHub" pop-up getting stuck on

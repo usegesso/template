@@ -9,6 +9,7 @@ import Footer from '../components/Footer.astro';
 import SEO from '../components/SEO.astro';
 import { resolveDesign, designVars, designClasses, motionAttr, googleFontsHref, faviconDataUri, readableOn } from '../lib/design';
 import { websiteLd, personLd } from '../lib/structured-data';
+import { withBase } from '../lib/href';
 
 interface Props {
   pageTitle?: string;
@@ -52,6 +53,9 @@ const faviconHref =
   design.favicon.mode === 'image' && design.favicon.image
     ? design.favicon.image
     : faviconDataUri(settings.siteTitle, design.color.accent, readableOn(design.color.accent));
+
+// RSS feed for News — only advertised (head + footer) when the News page is on.
+const rssHref = design.pages.news ? withBase('/rss.xml') : undefined;
 ---
 
 <!doctype html>
@@ -75,6 +79,10 @@ const faviconHref =
       pageImage={pageImage}
       jsonLd={siteJsonLd}
     />
+
+    {rssHref && (
+      <link rel="alternate" type="application/rss+xml" title={`${settings.siteTitle} — News`} href={rssHref} />
+    )}
 
     {/* Set motion attribute before paint to avoid a flash, honoring OS + stored pref. */}
     <script is:inline define:vars={{ fallback: settings.motionDefault }}>
@@ -109,7 +117,7 @@ const faviconHref =
       <slot />
     </main>
 
-    <Footer logoText={settings.logoText} socialLinks={settings.socialLinks} footerText={design.footer.text} />
+    <Footer logoText={settings.logoText} socialLinks={settings.socialLinks} footerText={design.footer.text} rssHref={rssHref} />
 
     {settings.rightClickProtect && (
       <script is:inline>

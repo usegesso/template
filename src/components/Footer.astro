@@ -3,8 +3,10 @@ interface Props {
   logoText: string;
   socialLinks?: { label: string; url: string }[];
   footerText?: string;
+  /** When set (News page enabled), shows a link to the RSS feed. */
+  rssHref?: string;
 }
-const { logoText, socialLinks = [], footerText } = Astro.props;
+const { logoText, socialLinks = [], footerText, rssHref } = Astro.props;
 const year = new Date().getFullYear();
 ---
 
@@ -12,13 +14,18 @@ const year = new Date().getFullYear();
   <div class="ez-container ez-footer__inner">
     <div class="ez-footer__brand"><span>{logoText}</span></div>
 
-    {socialLinks.length > 0 && (
+    {(socialLinks.length > 0 || rssHref) && (
       <ul class="ez-footer__social">
         {socialLinks.map((link) => (
           <li>
             <a href={link.url} rel="me noopener" target="_blank">{link.label}</a>
           </li>
         ))}
+        {rssHref && (
+          <li>
+            <a href={rssHref} rel="alternate">RSS</a>
+          </li>
+        )}
       </ul>
     )}
 
