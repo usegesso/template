@@ -3,23 +3,16 @@
  * StatusPill — the only fully-rounded element in the system. Color encodes the
  * artwork's status (available=blue, sold=red, inquire=yellow, nfs=stone).
  */
-type Status = 'available' | 'sold' | 'inquire' | 'nfs';
+import { type ArtworkStatus, STATUS_LABELS } from '../lib/status';
 
 interface Props {
-  status: Status;
+  status: ArtworkStatus;
   class?: string;
 }
 const { status, class: className } = Astro.props;
-
-const labels: Record<Status, string> = {
-  available: 'Available',
-  sold: 'Sold',
-  inquire: 'Inquire',
-  nfs: 'Not for sale',
-};
 ---
 
-<span class:list={['ez-pill', `ez-pill--${status}`, className]}>{labels[status]}</span>
+<span class:list={['ez-pill', `ez-pill--${status}`, className]}>{STATUS_LABELS[status]}</span>
 
 <style>
   .ez-pill {

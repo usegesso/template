@@ -13,5 +13,16 @@ export function withBase(path: string): string {
   // full URLs untouched.
   if (!path.startsWith('/')) return path;
   const base = import.meta.env.BASE_URL.replace(/\/$/, ''); // '' or '/<repo>'
-  return `${base}${path}` || '/';
+  return `${base}${path}`;
+}
+
+/**
+ * Strip the trailing `.md` from an Astro content-collection entry id.
+ *
+ * Astro 5 content ids carry the source file extension (e.g. `sunrise.md`), but
+ * URLs and lookups use the bare slug. This is load-bearing, not cosmetic — keep
+ * it in one place so every page derives slugs identically.
+ */
+export function stripMd(id: string): string {
+  return id.replace(/\.md$/, '');
 }

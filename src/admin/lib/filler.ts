@@ -11,7 +11,9 @@
  * The DOM these drive (in LivePreview's injectFiller) mirrors ArtworkCard.astro /
  * StatusPill.astro — keep them in sync if that structure changes.
  */
-export type FillerStatus = 'available' | 'sold' | 'inquire' | 'nfs';
+import { type ArtworkStatus, STATUS_LABELS } from '../../lib/status';
+
+export type FillerStatus = ArtworkStatus;
 
 export interface FillerEntry {
   title: string;
@@ -24,13 +26,8 @@ export interface FillerEntry {
   ratio: number;
 }
 
-/** Status → label, matching StatusPill.astro. */
-export const FILLER_STATUS_LABELS: Record<FillerStatus, string> = {
-  available: 'Available',
-  sold: 'Sold',
-  inquire: 'Inquire',
-  nfs: 'Not for sale',
-};
+/** Status → label (canonical public labels; shared with StatusPill.astro). */
+export const FILLER_STATUS_LABELS = STATUS_LABELS;
 
 export const FILLER_ENTRIES: FillerEntry[] = [
   { title: 'Composition in Blue', year: 2024, medium: 'Oil on canvas', status: 'available', price: '$1,800', ratio: 1.25 },

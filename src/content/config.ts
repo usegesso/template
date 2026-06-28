@@ -1,4 +1,5 @@
 import { defineCollection, reference, z } from 'astro:content';
+import { ARTWORK_STATUSES } from '../lib/status';
 
 /**
  * Content model for an Easel portfolio. All of these collections are edited by
@@ -7,7 +8,7 @@ import { defineCollection, reference, z } from 'astro:content';
  * it commits is always what the build can read.
  */
 
-const statusEnum = z.enum(['available', 'sold', 'inquire', 'nfs']);
+const statusEnum = z.enum(ARTWORK_STATUSES);
 
 // One .md per artwork. Frontmatter = metadata, body = optional description.
 const artworks = defineCollection({
