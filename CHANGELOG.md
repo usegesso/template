@@ -7,6 +7,14 @@ newer version includes before they choose to update.
 Every update is opt-in and non-destructive: your artwork, pages, settings, and style are
 always preserved, and new features stay off until you turn them on.
 
+## 0.40.8
+
+- **Quietly faster, under the hood.** Your pages load a touch quicker — the default fonts now
+  come from one place instead of being fetched twice — and saving a backup or running an
+  update now downloads your files in parallel, so larger sites finish noticeably sooner.
+  Nothing about your site's look or content changes. A small fix also stops your chosen
+  display name from being overwritten while you set things up in the wizard.
+
 ## 0.40.7
 
 - **A cleaner Pages list.** The tabs under Pages now show only the pages you've turned on,
