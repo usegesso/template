@@ -154,7 +154,7 @@
         <label class="ez-field ez-field--check"><input type="checkbox" bind:checked={d.hero.enabled} /><span>Show an intro (name + tagline) above my work</span></label>
         {#if d.hero.enabled && s}
           <label class="ez-field"><span class="ez-label">Your name</span>
-            <input class="ez-input" bind:value={s.siteTitle} oninput={() => s && (s.logoText = s.siteTitle)} placeholder="Lina Marsh" /></label>
+            <input class="ez-input" bind:value={s.siteTitle} oninput={onName} placeholder="Lina Marsh" /></label>
           <label class="ez-field"><span class="ez-label">Tagline</span>
             <input class="ez-input" bind:value={s.tagline} placeholder="Paintings and works on paper" /></label>
         {/if}
