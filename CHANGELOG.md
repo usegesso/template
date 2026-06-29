@@ -7,6 +7,16 @@ newer version includes before they choose to update.
 Every update is opt-in and non-destructive: your artwork, pages, settings, and style are
 always preserved, and new features stay off until you turn them on.
 
+## 0.42.1
+
+- **Your pages line up as you move between them.** Text pages now share a consistent width,
+  so the layout no longer jumps around as you click through your site.
+- **Set how wide your text reads.** A new Reading width setting (Comfortable, Relaxed, or
+  Spacious) controls how wide your writing pages run, separate from your gallery width.
+- **The footer stays at the bottom.** On short pages the footer now sits at the bottom of the
+  screen instead of floating partway up.
+- **A tidier setup walkthrough.** The first-time style walkthrough has a cleaner look.
+
 ## 0.42.0
 
 - **Show you're open for work.** Turn on a slim banner across the top of your site that lets

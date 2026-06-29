@@ -6,6 +6,7 @@
   import LivePreview from './LivePreview.svelte';
   import FontPicker from './FontPicker.svelte';
   import ContrastNotice from './ContrastNotice.svelte';
+  import GessoMark from '../GessoMark.svelte';
 
   let {
     gh,
@@ -69,7 +70,7 @@
 
 <div class="ez-wiz">
   <header class="ez-wiz__head">
-    <div class="ez-wiz__brand"><strong>gesso</strong><span class="ez-help">Let's set up your style</span></div>
+    <div class="ez-wiz__brand"><GessoMark size={28} /><strong>gesso</strong><span class="ez-help">Let's set up your style</span></div>
     <ol class="ez-wiz__steps">
       {#each STEPS as label, i (label)}
         <li class:ez-wiz__step--on={i === step} class:ez-wiz__step--done={i < step}>{label}</li>
@@ -150,9 +151,12 @@
         <label class="ez-field"><span class="ez-label">Captions</span>
           <select class="ez-input" bind:value={d.gallery.caption}>
             <option value="below">Below each piece</option><option value="hover">On hover</option><option value="hidden">Hidden</option></select></label>
-        <label class="ez-field"><span class="ez-label">Content width</span>
+        <label class="ez-field"><span class="ez-label">Gallery width</span>
           <select class="ez-input" bind:value={d.contentWidth}>
             <option value="narrow">Narrow</option><option value="normal">Normal</option><option value="wide">Wide</option></select></label>
+        <label class="ez-field"><span class="ez-label">Reading width</span>
+          <select class="ez-input" bind:value={d.readingWidth}>
+            <option value="comfortable">Comfortable</option><option value="relaxed">Relaxed</option><option value="spacious">Spacious</option></select></label>
         <label class="ez-field ez-field--check"><input type="checkbox" bind:checked={d.hero.enabled} /><span>Show an intro (name + tagline) above my work</span></label>
         {#if d.hero.enabled && s}
           <label class="ez-field"><span class="ez-label">Your name</span>

@@ -34,7 +34,11 @@ export interface DesignTokens {
     shadows: 'none' | 'hard' | 'soft';
   };
   density: 'compact' | 'normal' | 'airy';
+  /** Gallery / wide-page max width (home, work, series gallery). */
   contentWidth: 'narrow' | 'normal' | 'wide';
+  /** Text-page reading measure (about, cv, contact, shop, …). Scales all three
+      prose tiers together so text pages stay a consistent, adjustable width. */
+  readingWidth: 'comfortable' | 'relaxed' | 'spacious';
   motion: 'smooth' | 'rigid' | 'none';
   nav: { layout: 'side' | 'top' };
   /** Which page is the landing route at '/': the work gallery or the about intro. */
@@ -90,6 +94,7 @@ export const DEFAULT_DESIGN: DesignTokens = {
   shape: { radius: 0, borderWidth: 2, shadows: 'hard' },
   density: 'normal',
   contentWidth: 'normal',
+  readingWidth: 'relaxed',
   motion: 'smooth',
   nav: { layout: 'side' },
   home: { landing: 'work' },
@@ -161,6 +166,11 @@ export function resolveDesign(partial: DesignOverride | undefined): DesignTokens
 const DENSITY_GAP = { compact: '1rem', normal: '1.5rem', airy: '2.5rem' };
 const GUTTER = { tight: '0.75rem', normal: '1.5rem', loose: '2.5rem', none: '0' };
 const CONTENT_WIDTH = { narrow: '880px', normal: '1200px', wide: '1500px' };
+// Reading measures for text pages. Three tiers scale together from `readingWidth`
+// so every text page snaps to one shared, adjustable rhythm (no per-page magic px).
+const PROSE_NARROW = { comfortable: '480px', relaxed: '540px', spacious: '600px' };
+const PROSE = { comfortable: '640px', relaxed: '760px', spacious: '900px' };
+const PROSE_WIDE = { comfortable: '860px', relaxed: '980px', spacious: '1100px' };
 // Target min width per piece; the grid fits as many columns as the window allows.
 const ITEM_MIN = { small: '200px', medium: '290px', large: '400px' };
 const SHADOW = {
@@ -200,6 +210,10 @@ export function designVars(d: DesignTokens): string {
     '--ez-item-min': ITEM_MIN[d.gallery.size],
     '--ez-gallery-gap': GUTTER[d.gallery.gutter],
     '--ez-content-max': CONTENT_WIDTH[d.contentWidth],
+    '--ez-prose-narrow-max': PROSE_NARROW[d.readingWidth],
+    '--ez-prose-max': PROSE[d.readingWidth],
+    // Never let a text+media page run wider than the gallery width.
+    '--ez-prose-wide-max': `min(${PROSE_WIDE[d.readingWidth]}, var(--ez-content-max))`,
   };
   return `font-size:${d.type.baseSize}px;` + Object.entries(v).map(([k, val]) => `${k}:${val}`).join(';');
 }
@@ -388,6 +402,7 @@ export function applyDiscipline(base: DesignTokens, id: string): DesignTokens {
     hero: DEFAULT_DESIGN.hero,
     home: DEFAULT_DESIGN.home,
     contentWidth: DEFAULT_DESIGN.contentWidth,
+    readingWidth: DEFAULT_DESIGN.readingWidth,
     pages: DEFAULT_DESIGN.pages,
   };
   return mergeOver(mergeOver(base, reset), disc.overrides);

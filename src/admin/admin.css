@@ -184,8 +184,9 @@
 /* Welcome / style wizard */
 .ez-wiz { height: 100vh; display: flex; flex-direction: column; }
 .ez-wiz__head { display: flex; align-items: center; gap: var(--ez-space-5); padding: var(--ez-space-3) var(--ez-space-5); border-bottom: var(--ez-border-width) solid var(--ez-border); background: var(--ez-white); flex-wrap: wrap; }
-.ez-wiz__brand { display: flex; align-items: baseline; gap: var(--ez-space-3); }
-.ez-wiz__brand strong { font-family: var(--ez-font-display); font-size: var(--ez-text-xl); }
+.ez-wiz__brand { display: flex; align-items: center; gap: var(--ez-space-2); }
+.ez-wiz__brand strong { font-family: var(--ez-font-display); font-size: var(--ez-text-xl); transform: translateY(-0.15em); }
+.ez-wiz__brand .ez-help { margin-left: var(--ez-space-1); }
 .ez-wiz__steps { display: flex; flex: 1; gap: var(--ez-space-4); list-style: none; margin: 0; padding: 0; flex-wrap: wrap; }
 .ez-wiz__steps li { font-family: var(--ez-font-display); font-weight: 700; font-size: var(--ez-text-sm); color: var(--ez-stone); }
 .ez-wiz__step--on { color: var(--ez-blue); }

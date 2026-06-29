@@ -219,9 +219,14 @@
               <option value="none">None</option><option value="zoom">Zoom</option><option value="lift">Lift</option></select></label>
         </div>
         <div class="ez-row">
-          <label class="ez-field"><span class="ez-label">Content width</span>
+          <label class="ez-field"><span class="ez-label">Gallery width</span>
             <select class="ez-input" bind:value={d.contentWidth}>
               <option value="narrow">Narrow</option><option value="normal">Normal</option><option value="wide">Wide</option></select></label>
+          <label class="ez-field"><span class="ez-label">Reading width</span>
+            <select class="ez-input" bind:value={d.readingWidth}>
+              <option value="comfortable">Comfortable</option><option value="relaxed">Relaxed</option><option value="spacious">Spacious</option></select></label>
+        </div>
+        <div class="ez-row">
           <label class="ez-field"><span class="ez-label">Space between items</span>
             <select class="ez-input" bind:value={d.gallery.gutter}>
               <option value="none">None (seamless)</option><option value="tight">Tight</option><option value="normal">Normal</option><option value="loose">Loose</option></select></label>

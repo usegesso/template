@@ -1,7 +1,7 @@
 {
   "name": "gesso-template",
   "type": "module",
-  "version": "0.42.0",
+  "version": "0.42.1",
   "private": true,
   "description": "Gesso portfolio template — a Bauhaus-styled Astro static site for artists, editable via the custom Gesso editor at /admin.",
   "scripts": {
