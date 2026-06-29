@@ -2,23 +2,30 @@
 import { getCollection, getEntry } from 'astro:content';
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
+import StatusPill from '../components/StatusPill.astro';
 import { CARD_WIDTHS, cardSizes } from '../lib/images';
 import { withBase, stripMd } from '../lib/href';
 
-// A simple "shop" index of every available piece: thumbnail, title/meta, price,
-// and a Buy or Inquire action. The page only appears in the menu when the artist
-// turns on "Available work" in Design; the per-piece actions follow the same
-// `sellEnabled` switch as the work pages, so this stays a plain price list until
-// the artist opts into selling. Gesso never handles money — Buy links go out to
-// the artist's own checkout.
+// A "shop" / price-list index of every for-sale piece: thumbnail, title/meta,
+// status, price (and per-size tiers), with a Buy or Inquire action. The page only
+// appears in the menu when the artist turns on "Available work" in Design; the
+// per-piece actions follow the same `sellEnabled` switch as the work pages, so this
+// stays a plain price list until the artist opts into selling. Gesso never handles
+// money — Buy links go out to the artist's own checkout.
 const settings = (await getEntry('site', 'settings'))!.data;
 const artist = settings.logoText || settings.siteTitle;
 
+// Both for-sale states: pieces ready to buy and pieces sold by inquiry. Available
+// pieces sort first, then by the artist's manual order, so the list stays scannable.
+const SALE_STATUSES = ['available', 'inquire'] as const;
 const available = (await getCollection('artworks'))
-  .filter((a) => a.data.status === 'available')
-  .sort((a, b) => a.data.order - b.data.order);
+  .filter((a) => (SALE_STATUSES as readonly string[]).includes(a.data.status))
+  .sort((a, b) => {
+    if (a.data.status !== b.data.status) return a.data.status === 'available' ? -1 : 1;
+    return a.data.order - b.data.order;
+  });
 
-const inquireHref = (title: string) => `${withBase('/contact/')}?piece=${encodeURIComponent(title)}`;
+const inquireHref = (label: string) => `${withBase('/contact/')}?piece=${encodeURIComponent(label)}`;
 ---
 
 <Base
@@ -42,13 +49,35 @@ const inquireHref = (title: string) => `${withBase('/contact/')}?piece=${encodeU
                 <Image src={a.image} alt={a.alt} widths={CARD_WIDTHS} sizes={cardSizes(3)} loading="lazy" class="ez-avail__img" />
               </a>
               <div class="ez-avail__body">
-                <h2 class="ez-avail__title">
-                  <a href={withBase(`/work/${stripMd(entry.id)}/`)}>{a.title}</a>
-                </h2>
+                <div class="ez-avail__head">
+                  <h2 class="ez-avail__title">
+                    <a href={withBase(`/work/${stripMd(entry.id)}/`)}>{a.title}</a>
+                  </h2>
+                  <StatusPill status={a.status} class="ez-avail__pill" />
+                </div>
                 {meta && <p class="ez-avail__meta">{meta}</p>}
-                {a.price && <p class="ez-avail__price">{a.price}</p>}
+                {a.status === 'available' && a.price && <p class="ez-avail__price">{a.price}</p>}
                 {settings.sellEnabled && (
-                  a.buyLink ? (
+                  a.options && a.options.length > 0 ? (
+                    <ul class="ez-avail__options" role="list">
+                      {a.options.map((opt) => (
+                        <li class="ez-avail__option">
+                          <span class="ez-avail__optinfo">
+                            <span class="ez-avail__optlabel">{opt.label}</span>
+                            {opt.edition && <span class="ez-avail__optedition">{opt.edition}</span>}
+                          </span>
+                          {opt.price && <span class="ez-avail__optprice">{opt.price}</span>}
+                          {opt.soldOut ? (
+                            <span class="ez-avail__optsold">Sold</span>
+                          ) : opt.buyLink ? (
+                            <a class="ez-btn ez-btn--sm ez-btn--primary" href={opt.buyLink} rel="noopener" target="_blank">Buy</a>
+                          ) : (
+                            <a class="ez-btn ez-btn--sm" href={inquireHref(`${a.title} — ${opt.label}`)}>Inquire</a>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : a.buyLink ? (
                     <a class="ez-btn ez-btn--primary ez-avail__action" href={a.buyLink} rel="noopener" target="_blank">Buy</a>
                   ) : (
                     <a class="ez-btn ez-btn--primary ez-avail__action" href={inquireHref(a.title)}>Inquire</a>
@@ -82,10 +111,30 @@ const inquireHref = (title: string) => `${withBase('/contact/')}?piece=${encodeU
   .ez-avail__media { display: block; border-bottom: var(--ez-border-width) solid var(--ez-border); background: var(--ez-paper); }
   .ez-avail__img { width: 100%; height: auto; display: block; }
   .ez-avail__body { padding: var(--ez-space-4); display: flex; flex-direction: column; gap: var(--ez-space-2); flex: 1; }
+  .ez-avail__head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--ez-space-2); }
   .ez-avail__title { font-size: var(--ez-text-lg); margin: 0; }
   .ez-avail__title a { text-decoration: none; color: var(--ez-ink); }
   .ez-avail__title a:hover { color: var(--ez-blue); }
+  .ez-avail__pill { flex: none; }
   .ez-avail__meta { margin: 0; color: var(--ez-stone); font-size: var(--ez-text-sm); }
   .ez-avail__price { margin: 0; font-family: var(--ez-font-display); font-weight: 700; color: var(--ez-blue); }
   .ez-avail__action { margin-top: auto; align-self: flex-start; text-decoration: none; }
+  /* Per-size / edition tiers, mirroring the work page's options list. */
+  .ez-avail__options { list-style: none; margin: var(--ez-space-2) 0 0; padding: 0; display: flex; flex-direction: column; gap: var(--ez-space-2); }
+  .ez-avail__option {
+    display: flex;
+    align-items: center;
+    gap: var(--ez-space-3);
+    padding-top: var(--ez-space-2);
+    border-top: 1px solid var(--ez-border);
+  }
+  .ez-avail__option:first-child { border-top: none; padding-top: 0; }
+  .ez-avail__optinfo { display: flex; flex-direction: column; min-width: 0; }
+  .ez-avail__optlabel { font-weight: 600; }
+  .ez-avail__optedition { color: var(--ez-stone); font-size: var(--ez-text-sm); }
+  .ez-avail__optprice { margin-left: auto; font-family: var(--ez-font-display); font-weight: 700; }
+  .ez-avail__optsold { color: var(--ez-stone); font-size: var(--ez-text-sm); font-weight: 600; }
+  .ez-avail__option .ez-btn { flex: none; }
+  .ez-avail__optprice + .ez-btn { margin-left: 0; }
+  .ez-avail__optinfo + .ez-btn { margin-left: auto; }
 </style>
