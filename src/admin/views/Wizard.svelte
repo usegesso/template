@@ -8,6 +8,10 @@
   import ContrastNotice from './ContrastNotice.svelte';
   import PresetGallery from './PresetGallery.svelte';
   import GessoMark from '../GessoMark.svelte';
+  import { crossfade } from 'svelte/transition';
+  import { quintOut } from 'svelte/easing';
+
+  const [send, receive] = crossfade({ duration: 220, easing: quintOut });
 
   let {
     gh,
@@ -70,7 +74,12 @@
     <div class="ez-wiz__brand"><GessoMark size={28} /><strong>gesso</strong><span class="ez-help">Let's set up your style</span></div>
     <ol class="ez-wiz__steps">
       {#each STEPS as label, i (label)}
-        <li class:ez-wiz__step--on={i === step} class:ez-wiz__step--done={i < step}>{label}</li>
+        <li class:ez-wiz__step--on={i === step} class:ez-wiz__step--done={i < step}>
+          {#if i === step}
+            <span class="ez-wiz__hl" in:receive={{ key: 'wiz-hl' }} out:send={{ key: 'wiz-hl' }}></span>
+          {/if}
+          <span class="ez-wiz__step-label">{label}</span>
+        </li>
       {/each}
     </ol>
     <button class="ez-btn ez-btn--sm ez-btn--ghost" onclick={() => onClose(false)}>Skip for now</button>
